@@ -1,0 +1,249 @@
+/* Admin Login Page Styles */
+
+html, body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 50%, #fff5f5 100%);
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-header {
+    color: rgb(77, 75, 75);
+    text-align: center;
+    position: relative;
+}
+
+.login-logo {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.login-body {
+    padding: 1em 2rem;
+}
+
+.form-floating {
+    margin-bottom: 1.5rem;
+}
+
+.form-floating .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1rem 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-floating .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1);
+}
+
+.form-floating label {
+    padding: 1rem 0.75rem;
+    color: #6c757d;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0.5rem;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.login-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #8B0000 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.forgot-password {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #8B0000;
+    text-decoration: underline;
+}
+
+.login-footer {
+    background: #f8f9fa;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    border-top: 1px solid #e9ecef;
+}
+
+.back-to-site {
+    color: #6c757d;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.back-to-site:hover {
+    color: var(--primary-color);
+}
+
+.alert {
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #842029;
+    border-left: 4px solid var(--primary-color);
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.security-notice {
+    background: rgba(13, 110, 253, 0.1);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: #0a3d91;
+}
+
+.security-notice i {
+    color: #0d6efd;
+    margin-right: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    html, body {
+        height: auto;
+        overflow: auto;
+    }
+
+    .login-container {
+        height: auto;
+        min-height: 100vh;
+        padding: 1rem 0;
+    }
+
+    .login-card {
+        margin: 0 0.5rem;
+        border-radius: 15px;
+    }
+
+    .login-header {
+        padding: 2rem 1.5rem 1rem;
+    }
+
+    .login-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .login-footer {
+        padding: 1.5rem;
+    }
+}
