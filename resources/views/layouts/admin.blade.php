@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ $title ?? 'Admin Dashboard' }} - {{ config('app.name') }}</title>
+  <title>{{ $title ?? 'Admin Dashboard' }} - Winners Chapel International, Newport</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">

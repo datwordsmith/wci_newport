@@ -5,15 +5,18 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Event as EventModel;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout('layouts.admin')]
 class Event extends Component
 {
     use WithPagination;
     use WithFileUploads;
+
+    #[Title('Events')]
 
     public string $paginationTheme = 'bootstrap';
 
