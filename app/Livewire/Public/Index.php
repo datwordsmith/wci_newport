@@ -7,6 +7,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use App\Models\SundayService;
+use App\Models\Event;
 
 #[Layout('layouts.homepage')]
 class Index extends Component
@@ -15,10 +16,12 @@ class Index extends Component
 
     public $description = "Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith";
     public $nextSundayService = null;
+    public $upcomingEvents = [];
 
     public function mount()
     {
         $this->loadNextSundayService();
+        $this->loadUpcomingEvents();
     }
 
     #[On('sunday-service-updated')]
@@ -29,6 +32,13 @@ class Index extends Component
         $this->loadNextSundayService();
     }
 
+    #[On('event-updated')]
+    #[On('event-created')]
+    #[On('event-deleted')]
+    public function refreshEvents()
+    {
+        $this->loadUpcomingEvents();
+    }
     private function loadNextSundayService()
     {
         // Get current date
@@ -41,10 +51,24 @@ class Index extends Component
             ->first(); // Get only the next service
     }
 
+    private function loadUpcomingEvents()
+    {
+        // Get current date
+        $currentDate = now()->toDateString();
+
+        // Fetch upcoming events (limit to 3 events)
+        $this->upcomingEvents = Event::where('event_date', '>=', $currentDate)
+            ->orderBy('event_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->limit(3)
+            ->get();
+    }
+
     public function render()
     {
         return view('livewire.public.index', [
-            'nextSundayService' => $this->nextSundayService
+            'nextSundayService' => $this->nextSundayService,
+            'upcomingEvents' => $this->upcomingEvents
         ]);
     }
 }
