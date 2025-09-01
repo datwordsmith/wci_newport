@@ -21,6 +21,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('homepage') ? 'active' : '' }}" href="{{ route('homepage') }}" data-bs-dismiss="offcanvas">Home</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}" data-bs-dismiss="offcanvas">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}" data-bs-dismiss="offcanvas">Events</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}" data-bs-dismiss="offcanvas">WSF</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}" data-bs-dismiss="offcanvas">Service Units</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}" data-bs-dismiss="offcanvas">Testimonies</a></li>
@@ -37,6 +38,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('homepage') ? 'active' : '' }}" href="{{ route('homepage') }}">Home</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">About Us</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}">Events</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}">WSF</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}">Service Units</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}">Testimonies</a></li>

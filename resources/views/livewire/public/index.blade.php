@@ -33,6 +33,10 @@
         @include('layouts.inc._programmes', ['nextSundayService' => $nextSundayService])
     @endsection
 
+    @section('events')
+        @include('layouts.inc._events', ['upcomingEvents' => $upcomingEvents])
+    @endsection
+
     @section('next-sunday-service')
         @if($nextSundayService)
             <div class="next-sunday-service">

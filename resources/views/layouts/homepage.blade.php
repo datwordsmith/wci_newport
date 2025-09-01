@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="@yield('description', 'Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith')">
     <title>{{ $title ?? 'Winners Chapel International, Newport - Welcome Home' }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/lfww_logo.png') }}">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -66,55 +72,7 @@
     @yield('programmes')
 
     <!-- Events Section -->
-    <section id="events" class="events-section">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="serif-font">Upcoming Events</h2>
-                <p class="lead">Join us for these special gatherings</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="event-card">
-                        <div class="event-date">
-                            <div class="day">25</div>
-                            <div class="month">Aug</div>
-                        </div>
-                        <div class="p-4">
-                            <h5 class="serif-font mb-3">Family Fun Day</h5>
-                            <p class="mb-3">Join us for food, games, and fellowship at the beach. Bring the whole family!</p>
-                            <small class="text-muted"><i class="fas fa-clock me-1"></i>12:00 PM - 4:00 PM</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="event-card">
-                        <div class="event-date">
-                            <div class="day">02</div>
-                            <div class="month">Sep</div>
-                        </div>
-                        <div class="p-4">
-                            <h5 class="serif-font mb-3">Youth Ministry Retreat</h5>
-                            <p class="mb-3">A weekend of faith, fun, and friendship for our teenage community.</p>
-                            <small class="text-muted"><i class="fas fa-clock me-1"></i>Friday - Sunday</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="event-card">
-                        <div class="event-date">
-                            <div class="day">15</div>
-                            <div class="month">Sep</div>
-                        </div>
-                        <div class="p-4">
-                            <h5 class="serif-font mb-3">Harvest Festival</h5>
-                            <p class="mb-3">Celebrate the season with music, food, and thanksgiving together.</p>
-                            <small class="text-muted"><i class="fas fa-clock me-1"></i>2:00 PM - 8:00 PM</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    @yield('events')
 
     <!-- Testimonies Hero Section -->
     <section class="testimonies-hero">
