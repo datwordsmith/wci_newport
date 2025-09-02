@@ -42,6 +42,7 @@
 
     <!-- Yield Content -->
     @yield('content')
+    {{ $slot ?? '' }}
 
     <!-- Footer -->
     @include('layouts.inc._footer')

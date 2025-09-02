@@ -1,8 +1,4 @@
 <div>
-    @section('description', $description)
-
-    @section('content')
-
         <!-- WSF Introduction -->
         <section class="py-5">
             <div class="container">
@@ -92,15 +88,6 @@
                     </div>
                 </div>
 
-                <!-- Debug Info -->
-                <div class="row justify-content-center mb-3">
-                    <div class="col-md-8">
-                        <div class="alert alert-info">
-                            <strong>Debug Info:</strong> Search value: "{{ $search }}" | Results count: {{ $wsfs->count() }}
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Search and Filter -->
                 <div class="row justify-content-center mb-4">
                     <div class="col-md-8">
@@ -111,7 +98,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                                             <input type="text"
-                                                   wire:model.live.debounce.500ms="search"
+                                                   wire:model.live="search"
                                                    class="form-control"
                                                    placeholder="Search by name, address, postcode, or area..."
                                                    value="{{ $search }}">
@@ -124,21 +111,6 @@
                                                 <i class="fas fa-times"></i> <span class="d-none d-md-inline">Clear</span>
                                             </button>
                                         @endif
-                                    </div>
-                                </div>
-
-                                <!-- Test Buttons -->
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <button wire:click="testSearch" class="btn btn-primary btn-sm me-2">
-                                            Test Search Method
-                                        </button>
-                                        <button wire:click="$set('search', 'test')" class="btn btn-warning btn-sm me-2">
-                                            Test $set
-                                        </button>
-                                        <button onclick="Livewire.dispatch('search-updated', { search: 'manual test' })" class="btn btn-info btn-sm">
-                                            Test Event
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +141,7 @@
                                                         <span class="badge bg-light text-dark border">{{ $wsf->area }}</span>
                                                     </div>
                                                 </div>
-                                                <div class="mt-3">
+                                                <div class="mt-3 text-end">
                                                     <a href="https://maps.google.com/?q={{ urlencode($wsf->address) }}"
                                                         target="_blank" rel="noopener" class="btn btn-sm btn-primary-custom">
                                                         <i class="fas fa-directions me-1"></i>Get Directions
@@ -181,7 +153,7 @@
                                 @endforeach
                             @else
                                 <div class="col-md-12">
-                                    <div class="alert alert-warning text-center">
+                                    <div class="alert alert-danger text-center">
                                         <h5>No locations found</h5>
                                         @if($search)
                                             <p>No results match your search term: "{{ $search }}"</p>
@@ -227,5 +199,4 @@
                 </div>
             </div>
         </section>
-    @endsection
 </div>
