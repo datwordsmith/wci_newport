@@ -22,4 +22,5 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
     Route::get('sunday-service', \App\Livewire\Admin\SundayService::class)->name('sunday_service');
     Route::get('events', \App\Livewire\Admin\Event::class)->name('events');
+    Route::get('wsf', \App\Livewire\Admin\Wsf::class)->name('wsf');
 });

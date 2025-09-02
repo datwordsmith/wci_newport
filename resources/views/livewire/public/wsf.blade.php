@@ -92,34 +92,53 @@
                     </div>
                 </div>
 
+                <!-- Debug Info -->
+                <div class="row justify-content-center mb-3">
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <strong>Debug Info:</strong> Search value: "{{ $search }}" | Results count: {{ $wsfs->count() }}
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Search and Filter -->
                 <div class="row justify-content-center mb-4">
                     <div class="col-md-8">
                         <div class="card shadow-sm">
                             <div class="card-body p-3">
                                 <div class="row g-3 align-items-end">
-                                    <div class="col-md-6">
-                                        <label for="locationSearch" class="form-label fw-semibold">Search by location or name</label>
+                                    <div class="col-md-9 col-10">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                            <input type="text" class="form-control" id="locationSearch" placeholder="e.g. Newport, Grace, Church Road...">
-                                            <button class="btn btn-outline-secondary" type="button" id="clearLocationSearch" title="Clear search">
-                                                <i class="fas fa-times"></i>
+                                            <input type="text"
+                                                   wire:model.live.debounce.500ms="search"
+                                                   class="form-control"
+                                                   placeholder="Search by name, address, postcode, or area..."
+                                                   value="{{ $search }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-2">
+                                        @if($search)
+                                            <button wire:click="clearFilters" class="btn btn-outline-secondary">
+                                                <i class="fas fa-times"></i> <span class="d-none d-md-inline">Clear</span>
                                             </button>
-                                        </div>
+                                        @endif
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="areaFilter" class="form-label fw-semibold">Filter by area</label>
-                                        <select class="form-select" id="areaFilter">
-                                            <option value="">All Areas</option>
-                                            <option value="Newport">Newport</option>
-                                            <option value="Cwmbran">Cwmbran</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="fw-semibold text-muted">
-                                            <span id="resultsCount">11</span> locations found
-                                        </div>
+                                </div>
+
+                                <!-- Test Buttons -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button wire:click="testSearch" class="btn btn-primary btn-sm me-2">
+                                            Test Search Method
+                                        </button>
+                                        <button wire:click="$set('search', 'test')" class="btn btn-warning btn-sm me-2">
+                                            Test $set
+                                        </button>
+                                        <button onclick="Livewire.dispatch('search-updated', { search: 'manual test' })" class="btn btn-info btn-sm">
+                                            Test Event
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -131,8 +150,66 @@
                 <div class="row justify-content-center">
                     <div class="col-md-10">
                         <div class="row g-3" id="wsfLocationsList">
-                            <!-- Locations will be populated by JavaScript -->
+                            @if($wsfs && $wsfs->count() > 0)
+                                @foreach($wsfs as $wsf)
+                                    <div class="col-12 col-md-4">
+                                        <div class="card h-100 wsf-location-card">
+                                            <div class="card-body">
+                                                <h5 class="card-title d-flex align-items-center">
+                                                    <i class="fas fa-users me-2" style="color: var(--primary-color);"></i>
+                                                    {{ $wsf->name }}
+                                                </h5>
+                                                <div class="card-text">
+                                                    <div class="d-flex mb-2">
+                                                        <i class="fas fa-map-marker-alt text-muted me-2 mt-1"></i>
+                                                        <small class="text-muted">{{ $wsf->address }}</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <i class="fas fa-tag text-muted me-2"></i>
+                                                        <span class="badge bg-light text-dark border">{{ $wsf->area }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <a href="https://maps.google.com/?q={{ urlencode($wsf->address) }}"
+                                                        target="_blank" rel="noopener" class="btn btn-sm btn-primary-custom">
+                                                        <i class="fas fa-directions me-1"></i>Get Directions
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-md-12">
+                                    <div class="alert alert-warning text-center">
+                                        <h5>No locations found</h5>
+                                        @if($search)
+                                            <p>No results match your search term: "{{ $search }}"</p>
+                                            <button wire:click="clearFilters" class="btn btn-outline-primary">
+                                                Clear Search and Show All
+                                            </button>
+                                        @else
+                                            <p>No WSF locations are currently available.</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
                         </div>
+
+                        <!-- Pagination -->
+                        @if($wsfs->hasPages())
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div class="text-muted">
+                                Showing {{ $wsfs->firstItem() ?? 0 }} to {{ $wsfs->lastItem() ?? 0 }} of {{ $wsfs->total() }} results
+                                @if($search)
+                                    for "{{ $search }}"
+                                @endif
+                            </div>
+                            <div>
+                                {{ $wsfs->links('pagination::bootstrap-5') }}
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -150,6 +227,5 @@
                 </div>
             </div>
         </section>
-
     @endsection
 </div>

@@ -18,7 +18,7 @@ class Events extends Component
     public $description = 'See all our upcoming events and activities.';
 
 
- public function mount()
+    public function mount()
     {
 
     }

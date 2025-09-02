@@ -342,7 +342,7 @@ class Event extends Component
             $query->whereYear('event_date', $this->filterYear);
         }
 
-        $events = $query->latest('event_date')->orderBy('start_time', 'asc')->paginate(1);
+        $events = $query->latest('event_date')->orderBy('start_time', 'asc')->paginate(9);
 
         return view('livewire.admin.event', ['events' => $events]);
     }
