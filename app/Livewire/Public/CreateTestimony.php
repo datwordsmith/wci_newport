@@ -8,10 +8,10 @@ use Livewire\Attributes\Layout;
 use App\Models\Testimony;
 
 #[Layout('layouts.main')]
-class Testimonies extends Component
+class CreateTestimony extends Component
 {
-    #[Title('Testimonies')]
-    public $description = "Discover the powerful testimonies of our members and how God is working in their lives";
+    #[Title('Share Your Testimony')]
+    public $description = "Share how God has moved in your life and inspire others with your testimony";
 
     // Form properties
     public $title = '';
@@ -26,6 +26,9 @@ class Testimonies extends Component
 
     // UI state
     public $showSuccessMessage = false;
+    public $showConfirmationModal = false;
+    public $submissionComplete = false;
+    public $submittedTestimonyTitle = '';
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -52,9 +55,22 @@ class Testimonies extends Component
 
     public function submitTestimony()
     {
+        // First validate the form
+        $this->validate();
+
+        // Show confirmation modal instead of submitting directly
+        $this->showConfirmationModal = true;
+    }
+
+    public function confirmSubmission()
+    {
+        // Validate again to be safe
         $this->validate();
 
         try {
+            // Store the title for the success screen
+            $this->submittedTestimonyTitle = $this->title;
+
             // Create the testimony
             Testimony::create([
                 'title' => $this->title,
@@ -69,23 +85,30 @@ class Testimonies extends Component
                 'is_approved' => false
             ]);
 
-            // Reset form
-            $this->reset([
-                'title', 'author', 'email', 'phone', 'result_category',
-                'testimony_date', 'engagements', 'content', 'publish_permission'
-            ]);
-
-            // Show success message
-            $this->showSuccessMessage = true;
-
-            // Dispatch browser event to close modal
-            $this->dispatch('testimony-submitted');
-
-            session()->flash('success', 'Thank you for sharing your testimony! It will be reviewed by our team before being published.');
+            // Show success screen instead of redirecting
+            $this->showConfirmationModal = false;
+            $this->submissionComplete = true;
 
         } catch (\Exception $e) {
             session()->flash('error', 'There was an error submitting your testimony. Please try again.');
+            $this->showConfirmationModal = false;
         }
+    }    public function cancelSubmission()
+    {
+        $this->showConfirmationModal = false;
+    }
+
+    public function addAnotherTestimony()
+    {
+        // Reset the form and return to the form state
+        $this->resetForm();
+        $this->submissionComplete = false;
+        $this->submittedTestimonyTitle = '';
+    }
+
+    public function goToTestimonies()
+    {
+        return redirect()->route('testimonies');
     }
 
     public function resetForm()
@@ -129,6 +152,6 @@ class Testimonies extends Component
 
     public function render()
     {
-        return view('livewire.public.testimonies');
+        return view('livewire.public.create-testimony');
     }
 }

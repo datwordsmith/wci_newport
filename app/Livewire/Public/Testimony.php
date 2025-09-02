@@ -4,7 +4,9 @@ namespace App\Livewire\Public;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.main')]
 class Testimony extends Component
 {
 
@@ -13,7 +15,6 @@ class Testimony extends Component
 
     public function render()
     {
-        return view('livewire.public.testimony')
-            ->layout('layouts.main');
+        return view('livewire.public.testimony');
     }
 }
