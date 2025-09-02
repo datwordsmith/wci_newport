@@ -8,9 +8,9 @@
         <div class="container">
             <div class="mb-4">
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addTestimonyModal">
+                    <a href="{{ route('testimonies.create') }}" class="btn btn-primary-custom">
                         <i class="fas fa-microphone me-2"></i>Share Your Testimony
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Filter Controls -->

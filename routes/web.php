@@ -16,6 +16,7 @@ Route::get('/events', App\Livewire\Public\Events::class)->name('events');
 Route::get('/wsf', App\Livewire\Public\Wsf::class)->name('wsf');
 Route::get('/service-units', App\Livewire\Public\ServiceUnits::class)->name('service_units');
 Route::get('/testimonies', App\Livewire\Public\Testimonies::class)->name('testimonies');
+Route::get('/testimonies/create', App\Livewire\Public\CreateTestimony::class)->name('testimonies.create');
 Route::get('/contact', App\Livewire\Public\Contact::class)->name('contact');
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
