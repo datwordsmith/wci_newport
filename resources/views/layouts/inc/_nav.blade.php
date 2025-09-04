@@ -19,16 +19,16 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('homepage') ? 'active' : '' }}" href="{{ route('homepage') }}" data-bs-dismiss="offcanvas">Home</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}" data-bs-dismiss="offcanvas">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}" data-bs-dismiss="offcanvas">Events</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}" data-bs-dismiss="offcanvas">WSF</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}" data-bs-dismiss="offcanvas">Service Units</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}" data-bs-dismiss="offcanvas">Testimonies</a></li>
-                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}" data-bs-dismiss="offcanvas">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('homepage') ? 'active' : '' }}" href="{{ route('homepage') }}" onclick="closeOffcanvasAndNavigate('{{ route('homepage') }}')">Home</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}" onclick="closeOffcanvasAndNavigate('{{ route('about') }}')">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}" onclick="closeOffcanvasAndNavigate('{{ route('events') }}')">Events</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}" onclick="closeOffcanvasAndNavigate('{{ route('wsf') }}')">WSF</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}" onclick="closeOffcanvasAndNavigate('{{ route('service_units') }}')">Service Units</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}" onclick="closeOffcanvasAndNavigate('{{ route('testimonies') }}')">Testimonies</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}" onclick="closeOffcanvasAndNavigate('{{ route('contact') }}')">Contact Us</a></li>
                 </ul>
                 <div class="mt-3 d-grid gap-2">
-                    <a href="#prayer" class="btn btn-primary-custom btn-sm" data-bs-dismiss="offcanvas">COVENANT HOUR OF PRAYER</a>
+                    <a href="{{ route('contact') }}" class="btn btn-primary-custom btn-sm" onclick="closeOffcanvasAndNavigate('{{ route('contact') }}')">COVENANT HOUR OF PRAYER</a>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Contact Us</a></li>
             </ul>
             <div class="d-flex gap-2 ms-1">
-                <a href="#prayer" class="btn btn-primary-custom btn-sm"><small>COVENANT HOUR<br>MON-SAT 6-7AM</small></a>
+                <a href="{{ route('contact') }}" class="btn btn-primary-custom btn-sm"><small>COVENANT HOUR<br>MON-SAT 6-7AM</small></a>
             </div>
         </div>
     </div>

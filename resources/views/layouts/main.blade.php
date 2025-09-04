@@ -32,9 +32,9 @@
     <section class="about-hero">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-8 text-center">
-                    <h1 class="serif-font mt-5">{{$title}}</h1>
-                    <p>@yield('description')</p>
+                <div class="col-md-8 text-center py-3">
+                    <h4 class="serif-font">{{$title}}</h4>
+                    <p class="small">@yield('description')</p>
                 </div>
             </div>
         </div>
@@ -53,11 +53,65 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        // Function to handle offcanvas closing and navigation
+        function closeOffcanvasAndNavigate(url) {
+            // Get offcanvas element
+            const offcanvasElement = document.getElementById('offcanvasNavbar');
+            if (offcanvasElement) {
+                // Get Bootstrap's offcanvas instance
+                const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                if (offcanvasInstance) {
+                    // Hide the offcanvas
+                    offcanvasInstance.hide();
+                    // Listen for hidden.bs.offcanvas event
+                    offcanvasElement.addEventListener('hidden.bs.offcanvas', function handler() {
+                        // Navigate after the offcanvas is hidden
+                        window.location.href = url;
+                        // Remove the event listener to prevent memory leaks
+                        offcanvasElement.removeEventListener('hidden.bs.offcanvas', handler);
+                    });
+                } else {
+                    // If no instance is found, just navigate
+                    window.location.href = url;
+                }
+            } else {
+                // If offcanvas element not found, just navigate
+                window.location.href = url;
+            }
+            // Prevent default link behavior
+            return false;
+        }
+    </script>
+
     @livewireScripts
     <script>
+        // Handle offcanvas navigation links properly
+        document.addEventListener('DOMContentLoaded', function() {
+            const offcanvasLinks = document.querySelectorAll('.offcanvas a[data-bs-dismiss="offcanvas"]');
+
+            offcanvasLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Get the href attribute before preventing default
+                    const href = this.getAttribute('href');
+
+                    // Allow Bootstrap to handle the offcanvas dismiss first
+                    setTimeout(function() {
+                        // Navigate to the link after a slight delay
+                        window.location.href = href;
+                    }, 150);
+                });
+            });
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
+                // Skip if this is an offcanvas dismiss button or other Bootstrap functionality
+                if (this.hasAttribute('data-bs-dismiss') || this.hasAttribute('data-bs-toggle')) {
+                    return; // Let Bootstrap handle it
+                }
+
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
