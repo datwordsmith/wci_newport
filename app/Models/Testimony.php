@@ -18,28 +18,38 @@ class Testimony extends Model
         'engagements',
         'content',
         'publish_permission',
-        'is_approved',
-        'approved_at',
+        'status',
+        'admin_feedback',
+        'reviewed_at',
         'approved_by_email'
     ];
 
     protected $casts = [
         'engagements' => 'array',
         'publish_permission' => 'boolean',
-        'is_approved' => 'boolean',
         'testimony_date' => 'date',
-        'approved_at' => 'datetime'
+        'reviewed_at' => 'datetime'
     ];
 
     // Scopes for filtering
     public function scopeApproved($query)
     {
-        return $query->where('is_approved', true);
+        return $query->where('status', 'approved');
     }
 
     public function scopePending($query)
     {
-        return $query->where('is_approved', false);
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeDeclined($query)
+    {
+        return $query->where('status', 'declined');
+    }
+
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
     }
 
     public function scopeByCategory($query, $category)
@@ -84,19 +94,48 @@ class Testimony extends Model
     public function approve($adminEmail)
     {
         $this->update([
-            'is_approved' => true,
-            'approved_at' => now(),
-            'approved_by_email' => $adminEmail
+            'status' => 'approved',
+            'reviewed_at' => now(),
+            'approved_by_email' => $adminEmail,
+            'admin_feedback' => null // Clear any previous feedback
         ]);
     }
 
-    // Method to unapprove testimony
-    public function unapprove()
+    // Method to decline testimony with feedback
+    public function decline($adminEmail, $feedback = null)
     {
         $this->update([
-            'is_approved' => false,
-            'approved_at' => null,
-            'approved_by_email' => null
+            'status' => 'declined',
+            'reviewed_at' => now(),
+            'approved_by_email' => $adminEmail,
+            'admin_feedback' => $feedback
         ]);
+    }
+
+    // Method to reset to pending status
+    public function resetToPending()
+    {
+        $this->update([
+            'status' => 'pending',
+            'reviewed_at' => null,
+            'approved_by_email' => null,
+            'admin_feedback' => null
+        ]);
+    }
+
+    // Helper methods for status checking
+    public function isApproved()
+    {
+        return $this->status === 'approved';
+    }
+
+    public function isPending()
+    {
+        return $this->status === 'pending';
+    }
+
+    public function isDeclined()
+    {
+        return $this->status === 'declined';
     }
 }

@@ -82,7 +82,7 @@ class CreateTestimony extends Component
                 'engagements' => $this->engagements,
                 'content' => $this->content,
                 'publish_permission' => $this->publish_permission,
-                'is_approved' => false
+                'status' => 'pending'
             ]);
 
             // Show success screen instead of redirecting

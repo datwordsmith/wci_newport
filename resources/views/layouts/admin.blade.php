@@ -550,6 +550,17 @@
         margin: 1px;
       }
     }
+
+    /* Livewire/Custom modal backdrop that must sit above fixed header */
+    .admin-modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
 <body>
@@ -632,7 +643,7 @@
           </a>
         </div>
         <div class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="{{ route('admin.testimonies.manage') }}" class="nav-link {{ request()->routeIs('admin.testimonies*') ? 'active' : '' }}">
             <i class="fas fa-microphone"></i>
             <span>Testimonies</span>
           </a>

@@ -24,4 +24,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('sunday-service', \App\Livewire\Admin\SundayService::class)->name('sunday_service');
     Route::get('events', \App\Livewire\Admin\Event::class)->name('events');
     Route::get('wsf', \App\Livewire\Admin\Wsf::class)->name('wsf');
+    Route::get('testimonies', \App\Livewire\Admin\ManageTestimonies::class)->name('testimonies.manage');
+    Route::get('testimonies/{id}', \App\Livewire\Admin\ViewTestimony::class)->name('testimonies.view');
 });
