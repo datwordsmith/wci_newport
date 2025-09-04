@@ -3,6 +3,7 @@
 namespace App\Livewire\Public;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Testimony;
@@ -10,8 +11,17 @@ use App\Models\Testimony;
 #[Layout('layouts.main')]
 class Testimonies extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     #[Title('Testimonies')]
     public $description = "Discover the powerful testimonies of our members and how God is working in their lives";
+
+    // Public filters/search
+    public $resultFilter = 'all';
+    public $engagementFilter = 'all';
+    public $searchTerm = '';
 
     // Form properties
     public $title = '';
@@ -49,6 +59,35 @@ class Testimonies extends Component
         'content.min' => 'Your testimony must be at least 50 characters long.',
         'publish_permission.accepted' => 'You must give permission to publish your testimony.'
     ];
+
+    // Reset pagination when filters/search change
+    public function updatingResultFilter() {
+        $this->resetPage();
+    }
+
+    public function updatingEngagementFilter() {
+        $this->resetPage();
+    }
+
+    public function updatingSearchTerm() {
+        $this->resetPage();
+    }
+
+    public function updatedSearchTerm()
+    {
+        $this->resetPage();
+        $this->dispatch('testimonies-updated');
+    }
+
+    public function updatedResultFilter()
+    {
+        $this->dispatch('testimonies-updated');
+    }
+
+    public function updatedEngagementFilter()
+    {
+        $this->dispatch('testimonies-updated');
+    }
 
     public function submitTestimony()
     {
@@ -97,6 +136,21 @@ class Testimonies extends Component
         $this->resetValidation();
     }
 
+    public function clearFilters()
+    {
+        $this->resultFilter = 'all';
+        $this->engagementFilter = 'all';
+        $this->searchTerm = '';
+        $this->resetPage();
+        $this->dispatch('testimonies-updated');
+    }
+
+    public function gotoPage($page, $pageName = 'page')
+    {
+        $this->setPage($page, $pageName);
+        $this->dispatch('testimonies-updated');
+    }
+
     public function getResultCategoriesProperty()
     {
         return [
@@ -129,6 +183,33 @@ class Testimonies extends Component
 
     public function render()
     {
-        return view('livewire.public.testimonies');
+        $query = Testimony::approved()
+            ->where('publish_permission', true);
+
+        if (!empty($this->searchTerm)) {
+            $searchTerm = trim($this->searchTerm);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%'.$searchTerm.'%')
+                  ->orWhere('author', 'like', '%'.$searchTerm.'%')
+                  ->orWhere('content', 'like', '%'.$searchTerm.'%');
+            });
+        }
+
+        if ($this->resultFilter !== 'all' && !empty($this->resultFilter)) {
+            $query->byCategory($this->resultFilter);
+        }
+
+        if ($this->engagementFilter !== 'all' && !empty($this->engagementFilter)) {
+            $query->byEngagement($this->engagementFilter);
+        }
+
+        $testimonies = $query
+            ->orderByDesc('reviewed_at')
+            ->orderByDesc('created_at')
+            ->paginate(9);
+
+        return view('livewire.public.testimonies', [
+            'testimonies' => $testimonies,
+        ]);
     }
 }

@@ -661,35 +661,29 @@
             padding: 0;
             text-align: center;
             position: relative;
-            min-height: 60vh;
+            min-height: 20vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 95px;
         }
 
         .about-hero .container {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 60vh;
+            min-height: 20vh;
         }
 
         .about-hero .row {
             width: 100%;
         }
 
-        .about-hero h1 {
-            font-size: 4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+        .about-hero h4 {
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            line-height: 1.1;
         }
 
         .about-hero p {
-            font-size: 1.4rem;
-            margin-bottom: 0;
-            font-weight: 300;
             opacity: 0.9;
         }
 
@@ -1599,16 +1593,17 @@
             }
 
             .about-hero p {
-                font-size: 1.1rem;
+
             }
 
             /* Reduce inner-page hero height on mobile (exclude index heroes) */
             .about-hero {
-                min-height: 30vh;
-                padding: 36px 0;
+                min-height: 10vh;
+                padding: 10px 0;
+                margin-top: 67px;
             }
             .about-hero .container {
-                min-height: 30vh;
+                min-height: 10vh;
             }
 
             /* Pillar cards mobile styles */
