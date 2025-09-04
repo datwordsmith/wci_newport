@@ -4,7 +4,9 @@ namespace App\Livewire\Public;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Layout;
 
+#[Layout('layouts.main')]
 class About extends Component
 {
     #[Title('About Us')]
@@ -13,7 +15,6 @@ class About extends Component
 
     public function render()
     {
-        return view('livewire.public.about')
-            ->layout('layouts.main');
+        return view('livewire.public.about');
     }
 }
