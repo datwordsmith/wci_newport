@@ -591,8 +591,8 @@
         <i class="fas fa-chevron-down"></i>
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
-        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+        <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user me-2"></i>My Profile</a></li>
+        <!--<li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>-->
         <li><hr class="dropdown-divider"></li>
         <li>
           <form method="POST" action="{{ route('logout') }}" class="d-inline">
@@ -654,11 +654,12 @@
       <div class="nav-section">
         <div class="nav-section-title">Users & Members</div>
         <div class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="{{ route('admin.users.manage') }}" class="nav-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
             <i class="fas fa-users"></i>
-            <span>All Users</span>
+            <span>Manage Users</span>
           </a>
         </div>
+        <!--
         <div class="nav-item">
           <a href="#" class="nav-link">
             <i class="fas fa-user-plus"></i>
@@ -671,9 +672,11 @@
             <span>Roles & Permissions</span>
           </a>
         </div>
+        -->
       </div>
 
       <!-- Church Management -->
+      <!--
       <div class="nav-section">
         <div class="nav-section-title">Church Operations</div>
         <div class="nav-item">
@@ -695,8 +698,10 @@
           </a>
         </div>
       </div>
+      -->
 
       <!-- System -->
+      <!--
       <div class="nav-section">
         <div class="nav-section-title">System</div>
         <div class="nav-item">
@@ -712,6 +717,7 @@
           </a>
         </div>
       </div>
+      -->
     </nav>
   </aside>
 
