@@ -19,7 +19,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 action-card">
-                    <a href="" class="">
+                    <a href="{{ route('giving') }}" class="">
                         <i class="fas fa-hand-holding-heart"></i>
                         <h4>GIVE</h4>
                         <p>Tithes, offerings & seeds</p>
