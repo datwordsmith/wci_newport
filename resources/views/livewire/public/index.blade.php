@@ -5,14 +5,14 @@
         <div class="container action-cards">
             <div class="row g-1 justify-content-center">
                 <div class="col-md-3 action-card">
-                    <a href="" class="" data-bs-toggle="modal" data-bs-target="#addTestimonyModal">
+                    <a href="{{ route('testimonies.create') }}" class="">
                         <i class="fas fa-microphone"></i>
                         <h4>SHARE TESTIMONY</h4>
                         <p>Tell us what God has done</p>
                     </a>
                 </div>
                 <div class="col-md-3 action-card">
-                    <a href="" class="">
+                    <a href="{{ route('service_units') }}" class="">
                         <i class="fas fa-people-group"></i>
                         <h4>GET INVOLVED</h4>
                         <p>Join a service group</p>

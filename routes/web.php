@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/', App\Livewire\Public\Index::class)->name('homepage');
 Route::get('/about', App\Livewire\Public\About::class)->name('about');
 Route::get('/events', App\Livewire\Public\Events::class)->name('events');
@@ -18,10 +16,11 @@ Route::get('/service-units', App\Livewire\Public\ServiceUnits::class)->name('ser
 Route::get('/testimonies', App\Livewire\Public\Testimonies::class)->name('testimonies');
 Route::get('/testimonies/create', App\Livewire\Public\CreateTestimony::class)->name('testimonies.create');
 Route::get('/testimony/{id}', App\Livewire\Public\Testimony::class)->name('testimony');
+Route::get('/giving', App\Livewire\Public\Giving::class)->name('giving');
 Route::get('/contact', App\Livewire\Public\Contact::class)->name('contact');
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
+    Route::get('/', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
     Route::get('sunday-service', \App\Livewire\Admin\SundayService::class)->name('sunday_service');
     Route::get('events', \App\Livewire\Admin\Event::class)->name('events');
     Route::get('wsf', \App\Livewire\Admin\Wsf::class)->name('wsf');

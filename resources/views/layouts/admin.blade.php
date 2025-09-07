@@ -570,7 +570,7 @@
       <button class="navbar-toggler d-lg-none me-3" type="button" onclick="toggleSidebar()" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a href="{{ route('home') }}" class="brand-section text-decoration-none">
+      <a href="{{ route('admin.dashboard') }}" class="brand-section text-decoration-none">
         <img src="{{ asset('assets/images/lfww_logo.png') }}" alt="Logo" class="brand-logo" />
         <div>
           <div class="brand-text">WCI Newport</div>

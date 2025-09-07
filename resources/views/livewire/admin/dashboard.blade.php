@@ -71,6 +71,7 @@
         </div>
 
         <!-- Secondary KPIs -->
+        <!--
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card shadow-sm h-100">
@@ -112,6 +113,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         <div class="row g-3">
             <!-- Pending Testimonies -->
@@ -151,7 +153,7 @@
                                 <div class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
                                         <h6 class="mb-1">{{ $t->title }}</h6>
-                                        <span class="badge bg-{{ $t->status === 'approved' ? 'success' : 'danger' }} small">{{ ucfirst($t->status) }}</span>
+                                        <span class="badge bg-{{ $t->status === 'approved' ? 'success' : 'danger' }} small pt-1 pb-0">{{ ucfirst($t->status) }}</span>
                                     </div>
                                     <small class="text-muted">Reviewed {{ $t->reviewed_at?->diffForHumans() }} by {{ $t->approved_by_email ?? 'N/A' }}</small>
                                 </div>

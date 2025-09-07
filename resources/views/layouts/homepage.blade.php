@@ -84,12 +84,12 @@
                     <p class="lead mb-4">God is working miracles in our midst everyday. Your testimony could be the encouragement someone needs to believe.</p>
                     <div class="row g-3 justify-content-center">
                         <div class="col-md-5">
-                            <a href="#read-testimonies" class="btn btn-outline-light btn-md w-100">
+                            <a href="{{ route('testimonies') }}" class="btn btn-outline-light btn-md w-100">
                                 <i class="fas fa-book-open me-2"></i>Read Testimonies
                             </a>
                         </div>
                         <div class="col-md-5">
-                            <a href="#share-testimony" class="btn btn-primary-custom btn-md w-100 py-2">
+                            <a href="{{ route('testimonies.create') }}" class="btn btn-primary-custom btn-md w-100 py-2">
                                 <i class="fas fa-microphone me-2"></i>Share Your Testimony
                             </a>
                         </div>
@@ -167,9 +167,9 @@
                 <div class="row mt-5">
                     <div class="col-lg-12 text-center">
                         <div class="social-links mb-3">
-                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/61553737660932" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/wcinewport" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.instagram.com/wcinewport/" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>

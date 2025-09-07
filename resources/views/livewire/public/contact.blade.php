@@ -22,9 +22,9 @@
                         </div>
                         <!-- Social icons -->
                         <div class="mb-3 social-round">
-                            <a href="#" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
-                            <a href="#" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.facebook.com/61553737660932" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://x.com/wcinewport" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.instagram.com/wcinewport/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
                         </div>
                         <div class="card shadow-sm">
                             <div class="card-body p-2">
@@ -65,145 +65,6 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Service Times -->
-        <section class="py-5 bg-light">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="serif-font">Our Programmes</h2>
-                    <p class="lead">Join us for these special programmes and activities</p>
-                </div>
-                <!-- Desktop Grid (hidden on mobile) -->
-                <div class="programs-grid d-none d-md-block">
-                    <div class="row g-2">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/sunday.jpg" alt="Sunday Service" class="img-fluid">
-                                <div class="program-overlay">
-                                    <div class="program-content">
-                                        <h4>Sunday Service</h4>
-                                        <p class="mb-0">Every Sunday | 10:00AM - 12:00PM</p>
-                                        <small>Ty Derwen, Church Road, Newport</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/chop.jpg" alt="Covenant Hour of Prayer" class="img-fluid">
-                                <div class="program-overlay">
-                                    <div class="program-content">
-                                        <h4>Covenant Hour of Prayer</h4>
-                                        <p class="mb-0">Monday-Saturday | 6am-7am</p>
-                                        <small>Microsoft Teams</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/kap.jpg" alt="Kingdom Advancement Prayers" class="img-fluid">
-                                <div class="program-overlay">
-                                    <div class="program-content">
-                                        <h4>Kingdom Advancement Prayers</h4>
-                                        <p class="mb-0">Monday-Friday | 7:00PM - 7:45PM</p>
-                                        <small>(Except Wednesday)</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/midweek.jpg" alt="Midweek Communion Service" class="img-fluid">
-                                <div class="program-overlay">
-                                    <div class="program-content">
-                                        <h4>Midweek Communion</h4>
-                                        <p class="mb-0">Every Wednesday | 6:30PM</p>
-                                        <small>Ty Derwen, Church Road, Newport</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/evangelism.jpg" alt="City Centre Outreach" class="img-fluid">
-                                <div class="program-overlay">
-                                    <div class="program-content">
-                                        <h4>City Centre Outreach</h4>
-                                        <p class="mb-0">Saturdays | 12:00PM - 1:30PM</p>
-                                        <small>Commercial St, Kingsway Centre</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="program-card">
-                                <img src="assets/images/winning_foundation.jpg" alt="Winning Foundation Class" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mobile Slider (hidden on desktop) -->
-                <div class="programs-slider d-md-none">
-                    <div class="programs-track">
-                        <div class="program-card">
-                            <img src="assets/images/sunday.jpg" alt="Sunday Service" class="img-fluid">
-                            <div class="program-overlay">
-                                <div class="program-content">
-                                    <h4>Sunday Service</h4>
-                                    <p class="mb-0">Every Sunday | 10:00AM - 12:00PM</p>
-                                    <small>Ty Derwen, Church Road, Newport</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="program-card">
-                            <img src="assets/images/chop.jpg" alt="Covenant Hour of Prayer" class="img-fluid">
-                            <div class="program-overlay">
-                                <div class="program-content">
-                                    <h4>Covenant Hour of Prayer</h4>
-                                    <p class="mb-0">Monday-Saturday | 6am-7am</p>
-                                    <small>Microsoft Teams</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="program-card">
-                            <img src="assets/images/kap.jpg" alt="Kingdom Advancement Prayers" class="img-fluid">
-                            <div class="program-overlay">
-                                <div class="program-content">
-                                    <h4>Kingdom Advancement Prayers</h4>
-                                    <p class="mb-0">Monday-Friday | 7:00PM - 7:45PM</p>
-                                    <small>(Except Wednesday)</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="program-card">
-                            <img src="assets/images/midweek.jpg" alt="Midweek Communion Service" class="img-fluid">
-                            <div class="program-overlay">
-                                <div class="program-content">
-                                    <h4>Midweek Communion</h4>
-                                    <p class="mb-0">Every Wednesday | 6:30PM</p>
-                                    <small>Ty Derwen, Church Road, Newport</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="program-card">
-                            <img src="assets/images/evangelism.jpg" alt="City Centre Outreach" class="img-fluid">
-                            <div class="program-overlay">
-                                <div class="program-content">
-                                    <h4>City Centre Outreach</h4>
-                                    <p class="mb-0">Saturdays | 12:00PM - 1:30PM</p>
-                                    <small>Commercial St, Kingsway Centre</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="program-card">
-                            <img src="assets/images/winning_foundation.jpg" alt="Winning Foundation Class" class="img-fluid">
                         </div>
                     </div>
                 </div>
