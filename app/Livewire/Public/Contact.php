@@ -87,10 +87,15 @@ class Contact extends Component
                 'message' => $this->message
             ]);
 
-            // Get users with administrator role
-            $admins = User::where('role', ['super_admin','administrator'])->get();
-
-            $admins->each->notify(new ContactMessageAlert($contactMessage));
+            // Send notification to admins
+            $admins = User::whereIn('role', ['super_admin', 'administrator'])->get();
+            $admins->each(function ($admin) use ($contactMessage) {
+                try {
+                    $admin->notify(new ContactMessageAlert($contactMessage));
+                } catch (\Exception $e) {
+                    \Log::error("Failed to notify {$admin->email}: " . $e->getMessage());
+                }
+            });
 
             // Reset form fields
             $this->resetForm();

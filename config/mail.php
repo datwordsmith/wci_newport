@@ -119,6 +119,4 @@ return [
     |
     */
 
-    'admin_email' => env('MAIL_ADMIN_EMAIL', 'emeka.daniels@gmail.com'),
-
 ];
