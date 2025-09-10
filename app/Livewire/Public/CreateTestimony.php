@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Testimony;
+use App\Models\User;
+use App\Notifications\TestimonyAlert;
 
 #[Layout('layouts.main')]
 class CreateTestimony extends Component
@@ -72,7 +74,7 @@ class CreateTestimony extends Component
             $this->submittedTestimonyTitle = $this->title;
 
             // Create the testimony
-            Testimony::create([
+            $testimony = Testimony::create([
                 'title' => $this->title,
                 'author' => $this->author,
                 'email' => $this->email,
@@ -85,15 +87,29 @@ class CreateTestimony extends Component
                 'status' => 'pending'
             ]);
 
+            // Send notification to admins
+            $admins = User::whereIn('role', ['super_admin', 'administrator'])->get();
+            $admins->each(function ($admin) use ($testimony) {
+                try {
+                    $admin->notify(new TestimonyAlert($testimony));
+                } catch (\Exception $e) {
+                    \Log::error("Failed to notify {$admin->email}: " . $e->getMessage());
+                }
+            });
+
+
             // Show success screen instead of redirecting
             $this->showConfirmationModal = false;
             $this->submissionComplete = true;
 
         } catch (\Exception $e) {
             session()->flash('error', 'There was an error submitting your testimony. Please try again.');
+            \Log::error('Testimony submission error: ' . $e->getMessage());
             $this->showConfirmationModal = false;
         }
-    }    public function cancelSubmission()
+    }
+
+    public function cancelSubmission()
     {
         $this->showConfirmationModal = false;
     }
