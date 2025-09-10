@@ -15,6 +15,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     @livewireStyles
     <style>
 
@@ -52,6 +55,54 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Configure Toastr options
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Listen for Livewire events
+        document.addEventListener('DOMContentLoaded', function() {
+            // Success messages
+            window.addEventListener('toastr-success', event => {
+                toastr.success(event.detail.message || event.detail[0] || 'Success!');
+            });
+
+            // Error messages
+            window.addEventListener('toastr-error', event => {
+                toastr.error(event.detail.message || event.detail[0] || 'Something went wrong!');
+            });
+
+            // Info messages
+            window.addEventListener('toastr-info', event => {
+                toastr.info(event.detail.message || event.detail[0] || 'Information');
+            });
+
+            // Warning messages
+            window.addEventListener('toastr-warning', event => {
+                toastr.warning(event.detail.message || event.detail[0] || 'Warning!');
+            });
+        });
+    </script>
 
     <script>
         // Function to handle offcanvas closing and navigation
