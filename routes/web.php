@@ -26,6 +26,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('wsf', \App\Livewire\Admin\Wsf::class)->name('wsf');
     Route::get('testimonies', \App\Livewire\Admin\ManageTestimonies::class)->name('testimonies.manage');
     Route::get('testimonies/{id}', \App\Livewire\Admin\ViewTestimony::class)->name('testimonies.view');
+    Route::get('contact-messages', \App\Livewire\Admin\ContactMessages::class)->name('contact_messages');
     Route::get('users', \App\Livewire\Admin\ManageUsers::class)->name('users.manage');
     Route::get('profile', \App\Livewire\Admin\MyProfile::class)->name('profile');
 });

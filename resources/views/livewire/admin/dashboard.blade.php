@@ -70,6 +70,67 @@
             </div>
         </div>
 
+        <!-- Contact Messages KPIs -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-muted small">Total Messages</div>
+                                <div class="h4 mb-0">{{ $contactStats['total'] }}</div>
+                            </div>
+                            <div class="text-info"><i class="fas fa-envelope fa-lg"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-muted small">Unread</div>
+                                <div class="h4 mb-0">
+                                    {{ $contactStats['unread'] }}
+                                    @if($contactStats['unread'] > 0)
+                                        <span class="badge bg-danger ms-1">!</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="text-warning"><i class="fas fa-envelope-open fa-lg"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-muted small">Today</div>
+                                <div class="h4 mb-0">{{ $contactStats['today'] }}</div>
+                            </div>
+                            <div class="text-primary-custom"><i class="fas fa-calendar-day fa-lg"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-muted small">This Week</div>
+                                <div class="h4 mb-0">{{ $contactStats['week'] }}</div>
+                            </div>
+                            <div class="text-success"><i class="fas fa-calendar-week fa-lg"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Secondary KPIs -->
         <!--
         <div class="row g-3 mb-4">
@@ -161,6 +222,101 @@
                                 <div class="p-4 text-center text-muted">No recent approvals or declines.</div>
                             @endforelse
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Messages Section -->
+        <div class="row g-3 mt-4">
+            <!-- Recent Unread Messages -->
+            <div class="col-md-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>Recent Unread Messages
+                            @if($contactStats['unread'] > 0)
+                                <span class="badge bg-danger ms-2">{{ $contactStats['unread'] }}</span>
+                            @endif
+                        </h5>
+                        <a href="{{ route('admin.contact_messages') }}" class="btn btn-sm btn-outline-secondary">View all</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            @forelse($recentMessages as $message)
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">
+                                                    {{ $message->name }}
+                                                    <span class="badge bg-primary ms-2">{{ ucfirst(str_replace('_', ' ', $message->category)) }}</span>
+                                                </h6>
+                                                <small class="text-muted">{{ $message->created_at->diffForHumans() }}</small>
+                                            </div>
+                                            <p class="mb-1 text-truncate">{{ $message->subject }}</p>
+                                            <small class="text-muted">{{ $message->email }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="p-4 text-center text-muted">
+                                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                                    <div>All caught up! No unread messages.</div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Stats Summary -->
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Contact Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>Total Messages</span>
+                                <strong>{{ $contactStats['total'] }}</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-info" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>Unread</span>
+                                <strong class="text-warning">{{ $contactStats['unread'] }}</strong>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-warning" style="width: {{ $contactStats['total'] > 0 ? ($contactStats['unread'] / $contactStats['total']) * 100 : 0 }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>Today</span>
+                                <strong class="text-primary">{{ $contactStats['today'] }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="mb-0">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>This Week</span>
+                                <strong class="text-success">{{ $contactStats['week'] }}</strong>
+                            </div>
+                        </div>
+
+                        @if($contactStats['unread'] > 0)
+                            <hr>
+                            <a href="{{ route('admin.contact_messages') }}?statusFilter=unread" class="btn btn-warning btn-sm w-100">
+                                <i class="fas fa-eye me-1"></i> Review Unread
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
