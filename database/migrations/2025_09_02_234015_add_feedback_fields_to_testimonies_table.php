@@ -16,6 +16,13 @@ return new class extends Migration
             $table->text('admin_feedback')->nullable()->after('approved_by_email');
             $table->timestamp('reviewed_at')->nullable()->after('admin_feedback');
 
+            // Drop index referencing is_approved before dropping the column (fixes SQLite error)
+            try {
+                $table->dropIndex(['is_approved', 'created_at']);
+            } catch (\Throwable $e) {
+                // Index may not exist in some environments; ignore
+            }
+
             // Drop the old boolean field and add new enum status field
             $table->dropColumn('is_approved');
             $table->dropColumn('approved_at');

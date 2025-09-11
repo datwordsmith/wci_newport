@@ -8,6 +8,7 @@ use App\Models\Testimony;
 use App\Models\User;
 use App\Models\SundayService;
 use App\Models\Event;
+use App\Models\ContactMessage;
 
 #[Layout('layouts.admin')]
 class Dashboard extends Component
@@ -74,13 +75,26 @@ class Dashboard extends Component
         // Next upcoming event
         $upcomingEvent = Event::upcoming()->orderBy('event_date', 'asc')->first();
 
+        // Contact Messages stats
+        $contactStats = [
+            'total' => ContactMessage::count(),
+            'unread' => ContactMessage::unread()->count(),
+            'today' => ContactMessage::whereDate('created_at', now()->toDateString())->count(),
+            'week' => ContactMessage::where('created_at', '>=', now()->subDays(7))->count(),
+        ];
+
+        // Recent unread contact messages
+        $recentMessages = ContactMessage::unread()->latest()->take(5)->get();
+
         return view('livewire.admin.dashboard', compact(
             'stats',
             'pendingTestimonies',
             'recentReviewed',
             'recentUsers',
             'latestService',
-            'upcomingEvent'
+            'upcomingEvent',
+            'contactStats',
+            'recentMessages'
         ));
     }
 }
