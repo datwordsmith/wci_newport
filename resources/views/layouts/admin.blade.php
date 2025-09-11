@@ -648,6 +648,18 @@
             <span>Testimonies</span>
           </a>
         </div>
+        <div class="nav-item">
+          <a href="{{ route('admin.contact_messages') }}" class="nav-link {{ request()->routeIs('admin.contact_messages') ? 'active' : '' }}">
+            <i class="fas fa-envelope"></i>
+            <span>Messages</span>
+            @php
+              $unreadCount = \App\Models\ContactMessage::unread()->count();
+            @endphp
+            @if($unreadCount > 0)
+              <span class="badge bg-danger ms-2">{{ $unreadCount }}</span>
+            @endif
+          </a>
+        </div>
       </div>
 
       <!-- User Management -->

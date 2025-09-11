@@ -35,9 +35,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('testimonies/{id}', \App\Livewire\Admin\ViewTestimony::class)->name('testimonies.view');
     });
 
-    // Administrator can manage users (also covers super_admin)
+    // Administrator (and super_admin) can manage users and contact messages
     Route::middleware(['role:administrator,super_admin'])->group(function () {
         Route::get('users', \App\Livewire\Admin\ManageUsers::class)->name('users.manage');
+        Route::get('contact-messages', \App\Livewire\Admin\ContactMessages::class)->name('contact_messages');
     });
 
     // All authenticated users can access their profile
