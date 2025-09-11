@@ -30,17 +30,40 @@
     <!-- Hero Section -->
     <section id="home" class="hero-section">
         <div class="container">
-            <div class="row">
-                <div class="d-flex align-items-end">
+            <div class="row align-items-center">
+                @hasSection('hero-service-info')
+                    <!-- Two-column layout when service exists -->
                     <div class="col-md-8">
-                    <div class="hero-content animate-fade-in">
-                        <h3 class="serif-font">Winners Chapel International<br>Newport</h3>
-                        <P>Liberating the World through the Preaching of the Word of Faith</P>
-                        <div class="mt-4">
-                            <a href="#services" class="btn btn-primary-custom me-3">Join Us This Sunday | <small>10AM</small></a>
+                        <div class="hero-content animate-fade-in">
+                            <!-- Show upcoming service info -->
+                            @yield('hero-service-info')
+
+                            <div class="mt-4">
+                                <!-- Show dynamic service button -->
+                                @yield('hero-service-button')
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="col-md-4">
+                        <div class="hero-poster text-center">
+                            @yield('hero-service-poster')
+                        </div>
+                    </div>
+                @else
+                    <!-- Single column layout when no service -->
+                    <div class="col-md-8">
+                        <div class="hero-content animate-fade-in">
+                            <!-- Show default church info when no upcoming service -->
+                            <h3 class="serif-font">Winners Chapel International<br>Newport</h3>
+                            <p>Liberating the World through the Preaching of the Word of Faith</p>
+
+                            <div class="mt-4">
+                                <!-- Default button when no service info -->
+                                <a href="#services" class="btn btn-primary-custom me-3">Join Us This Sunday | <small>10AM</small></a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </section>
