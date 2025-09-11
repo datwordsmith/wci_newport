@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 
 class Testimony extends Model
@@ -30,6 +31,22 @@ class Testimony extends Model
         'testimony_date' => 'date',
         'reviewed_at' => 'datetime'
     ];
+
+    /**
+     * Get the images for the testimony.
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(TestimonyImage::class)->ordered();
+    }
+
+    /**
+     * Get only approved images for the testimony.
+     */
+    public function approvedImages(): HasMany
+    {
+        return $this->hasMany(TestimonyImage::class)->approved()->ordered();
+    }
 
     // Scopes for filtering
     public function scopeApproved($query)
@@ -99,6 +116,10 @@ class Testimony extends Model
             'approved_by_email' => $adminEmail,
             'admin_feedback' => null // Clear any previous feedback
         ]);
+
+        // Auto-approve images that are not explicitly hidden
+        $this->images()->where('is_approved', true)->update(['is_approved' => true]);
+        // no-op for hidden (false)
     }
 
     // Method to decline testimony with feedback

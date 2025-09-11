@@ -21,6 +21,7 @@ class Testimony extends Component
         $this->testimonyId = $id;
         $this->testimony = TestimonyModel::approved()
             ->where('publish_permission', true)
+            ->with(['approvedImages' => function($q){ $q->orderBy('sort_order'); }])
             ->findOrFail($id);
 
         // Update the title and description based on the testimony

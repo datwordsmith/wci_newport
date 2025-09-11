@@ -5,13 +5,18 @@ namespace App\Livewire\Public;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
+use Livewire\WithFileUploads;
 use App\Models\Testimony;
+use App\Models\TestimonyImage;
 use App\Models\User;
 use App\Notifications\TestimonyAlert;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout('layouts.main')]
 class CreateTestimony extends Component
 {
+    use WithFileUploads;
+
     #[Title('Share Your Testimony')]
     public $description = "Share how God has moved in your life and inspire others with your testimony";
 
@@ -25,6 +30,10 @@ class CreateTestimony extends Component
     public $engagements = [];
     public $content = '';
     public $publish_permission = false;
+
+    // Image upload properties
+    public $images = [];
+    public $imageCaptions = [];
 
     // UI state
     public $showSuccessMessage = false;
@@ -41,7 +50,9 @@ class CreateTestimony extends Component
         'testimony_date' => 'nullable|date|before_or_equal:today',
         'engagements' => 'nullable|array',
         'content' => 'required|string|min:50',
-        'publish_permission' => 'required|boolean|accepted'
+        'publish_permission' => 'required|boolean|accepted',
+        'images.*' => 'nullable|image|max:2048',
+        'imageCaptions.*' => 'nullable|string|max:255'
     ];
 
     protected $messages = [
@@ -87,6 +98,9 @@ class CreateTestimony extends Component
                 'status' => 'pending'
             ]);
 
+            // Handle image uploads
+            $this->handleImageUploads($testimony);
+
             // Send notification to admins
             $admins = User::whereIn('role', ['super_admin', 'administrator'])->get();
             $admins->each(function ($admin) use ($testimony) {
@@ -131,9 +145,60 @@ class CreateTestimony extends Component
     {
         $this->reset([
             'title', 'author', 'email', 'phone', 'result_category',
-            'testimony_date', 'engagements', 'content', 'publish_permission'
+            'testimony_date', 'engagements', 'content', 'publish_permission',
+            'images', 'imageCaptions'
         ]);
         $this->resetValidation();
+    }
+
+    public function removeImage($index)
+    {
+        unset($this->images[$index]);
+        unset($this->imageCaptions[$index]);
+        $this->images = array_values($this->images);
+        $this->imageCaptions = array_values($this->imageCaptions);
+    }
+
+    public function updatedImages()
+    {
+        // Limit to 3 images
+        if (count($this->images) > 3) {
+            $this->images = array_slice($this->images, 0, 3);
+            session()->flash('warning', 'You can only upload a maximum of 3 images.');
+        }
+
+        // Validate each image (2MB = 2048 KB)
+        $this->validate([
+            'images.*' => 'image|max:2048'
+        ]);
+    }
+
+    private function handleImageUploads(Testimony $testimony)
+    {
+        if (empty($this->images)) {
+            return;
+        }
+
+        foreach ($this->images as $index => $image) {
+            if ($image) {
+                try {
+                    // Store the image
+                    $path = $image->store('testimony-images', 'public');
+
+                    // Create testimony image record
+                    TestimonyImage::create([
+                        'testimony_id' => $testimony->id,
+                        'image' => $path,
+                        'caption' => $this->imageCaptions[$index] ?? null,
+                        'sort_order' => $index + 1,
+                        // Default to visible; admin can hide before approval
+                        'is_approved' => true
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Image upload error: ' . $e->getMessage());
+                }
+            }
+        }
     }
 
     public function getResultCategoriesProperty()

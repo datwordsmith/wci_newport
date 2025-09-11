@@ -140,6 +140,62 @@
                             </div>
                         </div>
 
+                        <!-- Images (if any) -->
+                        @if($testimony->images && $testimony->images->count() > 0)
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-2">Submitted Images</h6>
+                                <div class="row g-3">
+                                    @foreach($testimony->images as $img)
+                                        <div class="col-md-4 col-6">
+                                            <div class="card h-100 shadow-sm">
+                                                 <div class="position-relative">
+                                                     <a href="#"
+                                                        class="d-block"
+                                                        role="button"
+                                                        data-image-src="{{ asset('storage/' . $img->image) }}"
+                                                        data-image-alt="Image {{ $loop->iteration }}"
+                                                        data-image-caption="{{ $img->caption }}">
+                                                         <img src="{{ asset('storage/' . $img->image) }}"
+                                                              class="card-img-top"
+                                                              style="height:140px;object-fit:cover;cursor:zoom-in;"
+                                                              alt="Image {{ $loop->iteration }}">
+                                                         <span class="badge bg-dark bg-opacity-75 position-absolute bottom-0 end-0 m-2"><i class="fas fa-search-plus"></i></span>
+                                                     </a>
+                                                    <span class="badge {{ $img->is_approved ? 'bg-success' : 'bg-secondary' }} position-absolute top-0 start-0 m-2">
+                                                        {{ $img->is_approved ? 'Approved' : 'Hidden' }}
+                                                    </span>
+                                                 </div>
+                                                <div class="card-body p-2 d-flex flex-column">
+                                                    @if($img->caption)
+                                                        <p class="small mb-2">{{ $img->caption }}</p>
+                                                    @else
+                                                        <p class="small text-muted mb-2 fst-italic">No caption</p>
+                                                    @endif
+                                                    <div class="mt-auto d-grid gap-2">
+                                                        @if($testimony->status === 'approved')
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled>
+                                                                <i class="fas fa-lock me-1"></i>Locked (Reset to Pending to change)
+                                                            </button>
+                                                        @else
+                                                            @if($img->is_approved)
+                                                                <button type="button" wire:click="hideImage({{ $img->id }})" class="btn btn-sm btn-outline-secondary">
+                                                                    <i class="fas fa-eye-slash me-1"></i>Hide
+                                                                </button>
+                                                            @else
+                                                                <button type="button" wire:click="showImage({{ $img->id }})" class="btn btn-sm btn-success">
+                                                                    <i class="fas fa-eye me-1"></i>Show
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Review History -->
                         @if($testimony->reviewed_at || $testimony->admin_feedback)
                             <div class="mb-4">
@@ -364,4 +420,57 @@
             </div>
         </div>
     @endif
+
+    <!-- Image Lightbox Modal -->
+    <div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-body p-0">
+                    <img id="lightboxImage" src="" alt="Preview" class="img-fluid w-100">
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <small class="text-light" id="lightboxCaption"></small>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Guard against duplicate bindings on Livewire re-renders
+        if (!window.__wciImageLightboxBound) {
+            window.__wciImageLightboxBound = true;
+            document.addEventListener('click', function (e) {
+                const trigger = e.target.closest('[data-image-src]');
+                if (!trigger) return;
+                e.preventDefault();
+                const modalEl = document.getElementById('imageLightboxModal');
+                if (!modalEl) return;
+                const imgEl = modalEl.querySelector('#lightboxImage');
+                const capEl = modalEl.querySelector('#lightboxCaption');
+                imgEl.src = trigger.getAttribute('data-image-src');
+                imgEl.alt = trigger.getAttribute('data-image-alt') || 'Image';
+                capEl.textContent = trigger.getAttribute('data-image-caption') || '';
+                // Use Bootstrap's JS API if available
+                if (window.bootstrap && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                } else {
+                    // Fallback: toggle via data API
+                    modalEl.classList.add('show');
+                    modalEl.style.display = 'block';
+                    modalEl.removeAttribute('aria-hidden');
+                    modalEl.setAttribute('aria-modal', 'true');
+                    // Close on backdrop click
+                    modalEl.addEventListener('click', function(ev) {
+                        if (ev.target === modalEl) {
+                            modalEl.classList.remove('show');
+                            modalEl.style.display = 'none';
+                            modalEl.setAttribute('aria-hidden', 'true');
+                        }
+                    }, { once: true });
+                }
+            });
+        }
+    </script>
 </div>

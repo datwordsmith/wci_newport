@@ -6,7 +6,8 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Testimony;
-use Illuminate\Support\Facades\Mail;
+use App\Models\TestimonyImage;
+use Illuminate\Support\Facades\Storage;
 
 #[Layout('layouts.admin')]
 class ViewTestimony extends Component
@@ -23,7 +24,7 @@ class ViewTestimony extends Component
 
     public function mount($id)
     {
-        $this->testimony = Testimony::findOrFail($id);
+        $this->testimony = Testimony::with(['images' => function($q){ $q->orderBy('sort_order'); }])->findOrFail($id);
         $this->adminFeedback = $this->testimony->admin_feedback ?? '';
     }
 
@@ -52,10 +53,7 @@ class ViewTestimony extends Component
     public function approveTestimony()
     {
         $this->testimony->approve(auth()->user()->email ?? 'admin@wci.org');
-
-        // TODO: Send approval email to testifier
-        $this->sendApprovalEmail($this->testimony);
-
+        $this->sendApprovalEmail($this->testimony); // placeholder
         session()->flash('success', 'Testimony approved successfully!');
         $this->closeModals();
         return redirect()->route('admin.testimonies.manage');
@@ -87,6 +85,38 @@ class ViewTestimony extends Component
         session()->flash('success', 'Testimony status reset to pending review.');
         $this->closeModals();
         return redirect()->route('admin.testimonies.manage');
+    }
+
+    public function hideImage($imageId)
+    {
+        if ($this->testimony->status === 'approved') {
+            session()->flash('error', 'Reset testimony to Pending before changing image visibility.');
+            return;
+        }
+        $image = TestimonyImage::where('testimony_id', $this->testimony->id)->where('id', $imageId)->firstOrFail();
+        $image->is_approved = false;
+        $image->save();
+        session()->flash('success', 'Image hidden.');
+        $this->refreshTestimony();
+    }
+
+    public function showImage($imageId)
+    {
+        if ($this->testimony->status === 'approved') {
+            session()->flash('error', 'Reset testimony to Pending before changing image visibility.');
+            return;
+        }
+        $image = TestimonyImage::where('testimony_id', $this->testimony->id)->where('id', $imageId)->firstOrFail();
+        $image->is_approved = true;
+        $image->save();
+        session()->flash('success', 'Image shown.');
+        $this->refreshTestimony();
+    }
+
+    protected function refreshTestimony()
+    {
+        $this->testimony->refresh();
+        $this->testimony->load(['images' => function($q){ $q->orderBy('sort_order'); }]);
     }
 
     private function sendApprovalEmail($testimony)

@@ -247,6 +247,55 @@
                                         @enderror
                                     </div>
 
+                                    <!-- Images (Optional) -->
+                                    <div class="col-12">
+                                        <label class="form-label fw-semibold">
+                                            <i class="fas fa-camera me-2"></i>Upload Images (Optional)
+                                            <span class="text-muted small">Max 3 images, each up to 2MB</span>
+                                        </label>
+                                        @if(session()->has('warning'))
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                {{ session('warning') }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            </div>
+                                        @endif
+                                        <input type="file" multiple accept="image/*" wire:model="images" class="form-control @error('images.*') is-invalid @enderror">
+                                        <div class="form-text">
+                                            Accepted formats: JPG, PNG, GIF. Images will be reviewed before they appear publicly.
+                                        </div>
+                                        @error('images.*')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+
+                                        <!-- Upload Progress -->
+                                        @if($images && count($images) > 0)
+                                            <div class="row g-3 mt-3">
+                                                @foreach($images as $idx => $img)
+                                                    <div class="col-md-4 col-6">
+                                                        <div class="card h-100 shadow-sm">
+                                                            <div class="position-relative">
+                                                                @if(method_exists($img,'temporaryUrl'))
+                                                                    <img src="{{ $img->temporaryUrl() }}" class="card-img-top" style="height:140px;object-fit:cover;" alt="Preview {{ $idx+1 }}">
+                                                                @else
+                                                                    <div class="d-flex align-items-center justify-content-center bg-light" style="height:140px;">
+                                                                        <span class="text-muted small">Preview unavailable</span>
+                                                                    </div>
+                                                                @endif
+                                                                <button type="button" wire:click="removeImage({{ $idx }})" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" title="Remove image">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="card-body p-2">
+                                                                <input type="text" wire:model="imageCaptions.{{ $idx }}" maxlength="255" class="form-control form-control-sm" placeholder="Caption (optional)">
+                                                                <small class="text-muted d-block mt-1">{{ strlen($imageCaptions[$idx] ?? '') }}/255</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+
                                     <!-- Permission -->
                                     <div class="col-12">
                                         <div class="form-check">
@@ -357,6 +406,37 @@
                                         <small class="text-muted">{{ strlen($content) }} characters</small>
                                     </div>
                                 </div>
+
+                                @if($images && count($images) > 0)
+                                    <hr class="my-4">
+                                    <div>
+                                        <h6 class="mb-2">Selected Images</h6>
+                                        <div class="row g-3">
+                                            @foreach($images as $idx => $img)
+                                                <div class="col-md-4 col-6">
+                                                    <div class="card h-100 shadow-sm">
+                                                        <div class="position-relative">
+                                                            @if(method_exists($img,'temporaryUrl'))
+                                                                <img src="{{ $img->temporaryUrl() }}" class="card-img-top" style="height:140px;object-fit:cover;" alt="Preview {{ $idx+1 }}">
+                                                            @else
+                                                                <div class="d-flex align-items-center justify-content-center bg-light" style="height:140px;">
+                                                                    <span class="text-muted small">Preview unavailable</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="card-body p-2">
+                                                            @if(!empty($imageCaptions[$idx] ?? ''))
+                                                                <small class="d-block">Caption: {{ $imageCaptions[$idx] }}</small>
+                                                            @else
+                                                                <small class="text-muted fst-italic">No caption</small>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -364,8 +444,18 @@
                         <button type="button" wire:click="cancelSubmission" class="btn btn-secondary">
                             <i class="fas fa-edit me-2"></i>Go Back to Edit
                         </button>
-                        <button type="button" wire:click="confirmSubmission" class="btn btn-success">
-                            <i class="fas fa-paper-plane me-2"></i>Yes, Submit Testimony
+                        <button type="button"
+                                wire:click="confirmSubmission"
+                                wire:loading.attr="disabled"
+                                wire:target="confirmSubmission"
+                                class="btn btn-success">
+                            <span wire:loading.remove wire:target="confirmSubmission">
+                                <i class="fas fa-paper-plane me-2"></i>Yes, Submit Testimony
+                            </span>
+                            <span wire:loading wire:target="confirmSubmission">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Submitting...
+                            </span>
                         </button>
                     </div>
                 </div>
