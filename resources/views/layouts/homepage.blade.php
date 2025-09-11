@@ -59,11 +59,15 @@
 
                             <div class="mt-4">
                                 <!-- Default button when no service info -->
-                                <a href="#services" class="btn btn-primary-custom me-3">Join Us This Sunday | <small>10AM</small></a>
+                                <a href="#services" class="btn btn-primary-custom me-3">Join us every Sunday | <small>10AM</small></a>
                             </div>
                         </div>
                     </div>
                 @endif
+                <div class="mt-2">
+                    <!-- Default button when no service info -->
+                    <a href="#services" class="btn btn-primary-custom me-3">Join us every Sunday | <small>10AM</small></a>
+                </div>
             </div>
         </div>
     </section>

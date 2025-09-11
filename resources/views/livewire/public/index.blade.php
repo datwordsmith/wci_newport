@@ -17,19 +17,13 @@
                 </div>
             @else --}}
                 <!-- Show service info when no poster available -->
+                <h3>Next Sunday</h3>
                 <div class="service-info mt-3">
                     <h5 class="text-warning mb-2">{{ \Carbon\Carbon::parse($nextSundayService->service_date)->format('l, F j, Y') }}</h5>
                     <h4 class="mb-2">{{ $nextSundayService->sunday_theme }}</h4>
-                    <p class="text-light mb-0">{{ \Carbon\Carbon::parse($nextSundayService->service_time)->format('g:i A') }}</p>
+                    <p class="text-light mb-0"><i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($nextSundayService->service_time)->format('g:i A') }}</p>
                 </div>
             {{-- @endif --}}
-        @endsection
-
-        @section('hero-service-button')
-            <a href="#services" class="btn btn-primary-custom me-3">
-                Join Us This {{ \Carbon\Carbon::parse($nextSundayService->service_date)->format('l') }} |
-                <small>{{ \Carbon\Carbon::parse($nextSundayService->service_time)->format('g:i A') }}</small>
-            </a>
         @endsection
     @endif
 
