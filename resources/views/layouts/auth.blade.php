@@ -10,6 +10,8 @@
 
     <title>{{ 'Admin Login - ' . config('app.name', 'WCI Newport') }}</title>
 
+    @include('layouts.inc._meta')
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">

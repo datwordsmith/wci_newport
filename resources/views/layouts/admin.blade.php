@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ $title ?? 'Admin Dashboard' }} - Winners Chapel International, Newport</title>
 
+    @include('layouts.inc._meta')
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">

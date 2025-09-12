@@ -6,6 +6,8 @@
     <meta name="description" content="@yield('description', 'Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith')">
     <title>{{ $title ?? 'Winners Chapel International, Newport - Welcome Home' }}</title>
 
+    @include('layouts.inc._meta')
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/lfww_logo.png') }}">

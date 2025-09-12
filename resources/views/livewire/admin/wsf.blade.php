@@ -24,7 +24,7 @@
         <div class="col-md-4 col-12 mb-2">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" wire:model.live="search" class="form-control" placeholder="Search events...">
+                <input type="text" wire:model.live="search" class="form-control" placeholder="Search WSF...">
             </div>
         </div>
 
