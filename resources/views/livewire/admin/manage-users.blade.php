@@ -179,7 +179,14 @@
                                 <input type="email"
                                        wire:model="email"
                                        class="form-control @error('email') is-invalid @enderror"
-                                       id="email">
+                                       id="email"
+                                       {{ $editMode ? 'readonly disabled' : '' }}>
+                                @if($editMode)
+                                    <div class="form-text text-danger">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Email cannot be changed for existing users
+                                    </div>
+                                @endif
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -198,28 +205,40 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="col-12">
-                                <label for="password" class="form-label">
-                                    Password
-                                    @if($editMode)
+                            @if($editMode)
+                                <div class="col-12">
+                                    <label for="password" class="form-label">
+                                        Password
                                         <small class="text-muted">(leave blank to keep current password)</small>
-                                    @endif
-                                </label>
-                                <input type="password"
-                                       wire:model="password"
-                                       class="form-control @error('password') is-invalid @enderror"
-                                       id="password">
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                    </label>
+                                    <input type="password"
+                                           wire:model="password"
+                                           class="form-control @error('password') is-invalid @enderror"
+                                           id="password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @else
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Password Generation:</strong> A secure 8-character password will be automatically generated and sent to the user's email address.
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeModal">Cancel</button>
-                        <button type="button" class="btn btn-primary-custom" wire:click="save">
-                            <i class="fas fa-save me-1"></i>
-                            {{ $editMode ? 'Update User' : 'Create User' }}
+                        <button type="button" class="btn btn-secondary" wire:click="closeModal" {{ $isLoading ? 'disabled' : '' }}>Cancel</button>
+                        <button type="button" class="btn btn-primary-custom" wire:click="save" {{ $isLoading ? 'disabled' : '' }}>
+                            @if($isLoading)
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                {{ $editMode ? 'Updating...' : 'Creating...' }}
+                            @else
+                                <i class="fas fa-save me-1"></i>
+                                {{ $editMode ? 'Update User' : 'Create User' }}
+                            @endif
                         </button>
                     </div>
                 </div>

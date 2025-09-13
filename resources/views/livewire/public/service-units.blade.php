@@ -122,12 +122,7 @@
                         <p class="lead mb-4">Use your gifts to build God’s house. Join a service unit and make a difference today.</p>
                         <div class="row g-3 justify-content-center">
                             <div class="col-md-5">
-                                <a href="#units" class="btn btn-outline-light btn-md w-100">
-                                    <i class="fas fa-list me-2"></i>See Units
-                                </a>
-                            </div>
-                            <div class="col-md-5">
-                                <a href="contact.html" class="btn btn-primary-custom btn-md w-100 py-2">
+                                <a href="{{ route('contact') }}" class="btn btn-primary-custom btn-md w-100 py-2">
                                     <i class="fas fa-user-plus me-2"></i>Join a Unit
                                 </a>
                             </div>

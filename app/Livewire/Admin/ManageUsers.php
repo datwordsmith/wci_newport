@@ -9,6 +9,9 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Notifications\NewUserCredentials;
+use App\Notifications\ProfileUpdatedByAdmin;
+use Illuminate\Support\Str;
 
 #[Layout('layouts.admin')]
 class ManageUsers extends Component
@@ -34,17 +37,20 @@ class ManageUsers extends Component
     // UI state
     public $showModal = false;
     public $editMode = false;
+    public $isLoading = false;
 
     protected function rules()
     {
         return [
             'firstname' => 'required|string|min:2|max:255',
             'surname' => 'required|string|min:2|max:255',
-            'email' => 'required|email|unique:users,email,' . ($this->userId ?? ''),
+            // Email only validated for new users, not editable for existing users
+            'email' => $this->editMode ? '' : 'required|email|unique:users,email',
             'role' => 'required|in:' . implode(',', array_keys($this->roles)),
+            // Password only required when editing and user wants to change it
             'password' => $this->editMode
                 ? ['nullable', Password::defaults()]
-                : ['required', Password::defaults()],
+                : [], // No password validation for new users - we generate it
         ];
     }
 
@@ -56,7 +62,6 @@ class ManageUsers extends Component
         'email.unique' => 'This email is already registered.',
         'role.required' => 'Please select a role.',
         'role.in' => 'Invalid role selected.',
-        'password.required' => 'Password is required for new users.',
     ];
 
     public function getRolesProperty()
@@ -71,6 +76,34 @@ class ManageUsers extends Component
     public function mount()
     {
         $this->role = User::ROLE_MODERATOR; // Default role for new users
+    }
+
+    /**
+     * Generate a strong 8-character password
+     */
+    private function generateStrongPassword(): string
+    {
+        // Mix of uppercase, lowercase, numbers, and symbols
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+        $symbols = '!@#$%&*';
+
+        // Ensure at least one character from each set
+        $password = '';
+        $password .= $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $lowercase[random_int(0, strlen($lowercase) - 1)];
+        $password .= $numbers[random_int(0, strlen($numbers) - 1)];
+        $password .= $symbols[random_int(0, strlen($symbols) - 1)];
+
+        // Fill the remaining 4 characters
+        $allChars = $uppercase . $lowercase . $numbers . $symbols;
+        for ($i = 4; $i < 8; $i++) {
+            $password .= $allChars[random_int(0, strlen($allChars) - 1)];
+        }
+
+        // Shuffle the password
+        return str_shuffle($password);
     }
 
     public function updatingSearch()
@@ -112,34 +145,78 @@ class ManageUsers extends Component
 
     public function save()
     {
-        $this->validate();
+        $this->isLoading = true;
 
         try {
+            $this->validate();
+
             if ($this->editMode) {
                 $user = User::findOrFail($this->userId);
-                $user->update([
-                    'firstname' => $this->firstname,
-                    'surname' => $this->surname,
-                    'email' => $this->email,
-                    'role' => $this->role,
-                ] + ($this->password ? ['password' => Hash::make($this->password)] : []));
 
-                $this->dispatch('success', 'User updated successfully.');
+                // Track what fields are being changed
+                $updatedFields = [];
+                $originalData = $user->only(['firstname', 'surname', 'role']);
+
+                // Check for changes in names and role
+                if ($user->firstname !== $this->firstname) {
+                    $updatedFields['firstname'] = $this->firstname;
+                }
+                if ($user->surname !== $this->surname) {
+                    $updatedFields['surname'] = $this->surname;
+                }
+                if ($user->role !== $this->role) {
+                    $updatedFields['role'] = $this->role;
+                }
+
+                // Check if password is being changed
+                $newPassword = null;
+                $updateData = [
+                    'firstname' => $this->firstname,
+                    'surname' => $this->surname,
+                    'role' => $this->role,
+                ];
+
+                if ($this->password) {
+                    $newPassword = $this->password; // Store plain password for email
+                    $updateData['password'] = Hash::make($this->password);
+                }
+
+                // Only update firstname, surname, and role for existing users
+                $user->update($updateData);
+
+                // Send notification if anything was changed
+                if (!empty($updatedFields) || $newPassword) {
+                    $user->notify(new ProfileUpdatedByAdmin($updatedFields, $newPassword));
+                }
+
+                $this->dispatch('success', 'User updated successfully. ' .
+                    ((!empty($updatedFields) || $newPassword) ? 'Notification email sent to user.' : ''));
             } else {
-                User::create([
+                // Generate strong password for new user
+                $generatedPassword = $this->generateStrongPassword();
+
+                $user = User::create([
                     'firstname' => $this->firstname,
                     'surname' => $this->surname,
                     'email' => $this->email,
                     'role' => $this->role,
-                    'password' => Hash::make($this->password),
+                    'password' => Hash::make($generatedPassword),
                 ]);
 
-                $this->dispatch('success', 'User created successfully.');
+                // Send email with credentials
+                $user->notify(new NewUserCredentials($generatedPassword, $this->role));
+
+                $this->dispatch('success', 'User created successfully. Login credentials have been sent to their email.');
             }
 
             $this->closeModal();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->isLoading = false;
+            throw $e; // Re-throw validation exception so Livewire handles it
         } catch (\Exception $e) {
-            $this->dispatch('error', 'There was an error saving the user.');
+            $this->dispatch('error', 'There was an error saving the user: ' . $e->getMessage());
+        } finally {
+            $this->isLoading = false;
         }
     }
 
@@ -168,6 +245,7 @@ class ManageUsers extends Component
     public function closeModal()
     {
         $this->showModal = false;
+        $this->isLoading = false;
         $this->reset(['userId', 'firstname', 'surname', 'email', 'password', 'role']);
         $this->resetValidation();
     }
