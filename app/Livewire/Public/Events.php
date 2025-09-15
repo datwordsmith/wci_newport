@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Public;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\SundayService;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
-use Carbon\Carbon;
 
 #[Layout('layouts.main')]
 class Events extends Component
@@ -17,11 +18,26 @@ class Events extends Component
     #[Title('Events')]
     public $description = 'See all our upcoming events and activities.';
 
+    public $nextSundayService = null;
+
 
     public function mount()
     {
-
+        $this->loadNextSundayService();
     }
+
+    private function loadNextSundayService()
+    {
+        // Get current date
+        $currentDate = now()->toDateString();
+
+        // Fetch only the next upcoming Sunday service
+        $this->nextSundayService = SundayService::where('service_date', '>=', $currentDate)
+            ->orderBy('service_date', 'asc')
+            ->orderBy('service_time', 'asc')
+            ->first(); // Get only the next service
+    }
+
     public function render()
     {
         $events = Event::where('event_date', '>=', Carbon::now()->toDateString())

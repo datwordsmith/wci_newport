@@ -2,8 +2,36 @@
     @section('description', $description)
 
     @section('content')
-        <!-- Founder Section -->
-        <section class="founder-section">
+        <!-- WCI Newport Background Section -->
+        <section class="founder-section py-5 mt-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 order-2 order-md-1">
+                        <h2 class="serif-font mb-4">Winners Chapel International, Newport</h2>
+                        <p class="">
+                            Winners Chapel International, Newport is a vibrant and fast-growing assembly of the Living Faith Church Worldwide, dedicated to spreading the gospel and empowering lives through faith, service, and community. Officially inaugurated on October 28, 2023, the church held its first Sunday service the very next day, marking the beginning of a dynamic spiritual journey in the heart of Newport.
+                        </p>
+                        <p class="text-justify">
+                            From its inception, WCI Newport has been blessed with a committed congregation, starting with 120 passionate members and growing steadily through impactful outreach, heartfelt worship, and strong community ties.
+                        </p>
+                        <p class="text-justify">
+                            The church is located near the city centre, offering a welcoming space with modern facilities and ample parking. With 10 thriving home cells, active social media presence, and a dedicated pastoral and workforce team, WCI Newport continues to flourish as a beacon of light and love.
+                        </p>
+                        <p class="text-justify">
+                            We are a church on a mission: to win souls, serve our community, and honour God through excellence, unity, and unwavering commitment.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-4 mb-md-0 order-1 order-md-2">
+                        <div class="founder-image">
+                            <img src="{{ asset('assets/images/wci_newport_service.jpg') }}" alt="WCI Newport Church Building" class="img-fluid rounded shadow" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission Statement Section -->
+        <section class="founder-section bg-light">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-4 mb-4 mb-md-0">
@@ -27,6 +55,43 @@
                         <p>
                             In 1982 he married Florence Abiola Akano (now known as Faith). They have four children together (David Jr., Isaac, Love, and Joy). David Jr. and Isaac Oyedepo were ordained as Pastors in May 2007 by Kenneth Copeland.
                         </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Founder Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="serif-font">Mission Statement</h2>
+                    <p class="lead">Our Divine Commission</p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="mission-content text-center">
+                            <p class="lead mb-4" style="text-align: justify;">
+                                Our Mandate for ministry was received from the LORD Himself in an 18-hour vision. During this vision, a commission was received from the LORD to liberate mankind in all facets of human existence, to restore broken destinies, and to bring healing to the sick and brokenhearted.
+                            </p>
+
+                            <div class="mission-quote my-5">
+                                <blockquote class="blockquote">
+                                    <p class="mb-3 h5 text-primary-custom">
+                                        <i class="fas fa-quote-left me-2"></i>
+                                        "The hour has come to liberate the world from all oppressions of the devil through the preaching of the word of faith, and I am sending you to undertake this task."
+                                        <i class="fas fa-quote-right ms-2"></i>
+                                    </p>
+                                    <footer class="blockquote-footer mt-2">
+                                        <cite title="Source Title">This was the Divine mandate received from the LORD</cite>
+                                    </footer>
+                                </blockquote>
+                            </div>
+
+                            <p class="lead" style="text-align: justify;">
+                                Today, testimonies of liberation through our messages, books, tapes, magazines and other periodicals are most humbling. The word of faith is working like fire for the liberation of mankind across the nations.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

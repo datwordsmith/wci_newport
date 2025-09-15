@@ -24,6 +24,7 @@
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}" onclick="closeOffcanvasAndNavigate('{{ route('events') }}')">Events</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}" onclick="closeOffcanvasAndNavigate('{{ route('wsf') }}')">WSF</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}" onclick="closeOffcanvasAndNavigate('{{ route('service_units') }}')">Service Units</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('csr') ? 'active' : '' }}" href="{{ route('csr') }}" onclick="closeOffcanvasAndNavigate('{{ route('csr') }}')">CSR</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}" onclick="closeOffcanvasAndNavigate('{{ route('testimonies') }}')">Testimonies</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('giving') ? 'active' : '' }}" href="{{ route('giving') }}" onclick="closeOffcanvasAndNavigate('{{ route('giving') }}')">Giving</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}" onclick="closeOffcanvasAndNavigate('{{ route('contact') }}')">Contact Us</a></li>
@@ -42,6 +43,7 @@
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('events') ? 'active' : '' }}" href="{{ route('events') }}">Events</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('wsf') ? 'active' : '' }}" href="{{ route('wsf') }}">WSF</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('service_units') ? 'active' : '' }}" href="{{ route('service_units') }}">Service Units</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('csr') ? 'active' : '' }}" href="{{ route('csr') }}">CSR</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('testimonies') ? 'active' : '' }}" href="{{ route('testimonies') }}">Testimonies</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('giving') ? 'active' : '' }}" href="{{ route('giving') }}">Giving</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold nav-link-custom {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Contact Us</a></li>

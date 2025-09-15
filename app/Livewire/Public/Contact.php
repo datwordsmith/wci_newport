@@ -35,6 +35,7 @@ class Contact extends Component
         'service_unit' => 'Service Unit',
         'programmes_events' => 'Programmes/Events',
         'testimonies' => 'Testimonies',
+        'csr' => 'Corporate Social Responsibility',
         'general' => 'General Inquiry'
     ];
 

@@ -58,11 +58,6 @@
                             <!-- Show default church info when no upcoming service -->
                             <h3 class="serif-font">Winners Chapel International<br>Newport</h3>
                             <p>Liberating the World through the Preaching of the Word of Faith</p>
-
-                            <div class="mt-4">
-                                <!-- Default button when no service info -->
-                                <a href="#services" class="btn btn-primary-custom me-3">Join us every Sunday | <small>10AM</small></a>
-                            </div>
                         </div>
                     </div>
                 @endif
@@ -84,14 +79,20 @@
             <div class="row align-items-center">
                 <div class="col-md-6 mb-4 mb-md-0">
                     <div class="about-image">
-                        <img src="{{ asset('assets/images/church.jpg') }}" alt="Welcome to Church" class="img-fluid rounded shadow" />
+                        <img src="{{ asset('assets/images/pastor_craig_01.jpg') }}" alt="Pastor Craig Oluwatosin" class="img-fluid rounded shadow" />
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h2 class="serif-font mb-4">A Place of Liberation and Faith</h2>
-                    <p class="lead mb-4">We are commissioned to liberate the world from all oppressions through the preaching of the Word of Faith. Here, broken destinies are restored and the infirmed receive healing.</p>
-                    <p>Our ministry is built on the divine mandate to bring liberation to mankind in all facets of human existence. Through the Word of Faith, we witness testimonies of breakthrough, healing, prosperity, and spiritual transformation.</p>
-                    <p>Whether you're seeking freedom from life's challenges, spiritual growth, or divine purpose, you'll find a community dedicated to triumphant living through faith. The Word of Faith is working like fire for liberation across the nations.</p>
+                    <p class="">You are welcome to Winners Chapel International, Newport, a home of signs and wonders where God stops the tears of men and women; where God confers breakthroughs in all areas and God decorates destiny here. Our turnaround God has been at work in this commission for over decades, surprising every member of this church with unimaginable testimonies as they believe. If you will endeavour to abide in this church and commit to following every instruction that you receive here, the Lord God will bless you openly as he did to Obed-Edom.</p>
+
+                    <p>Since God is not a respecter of persons, expect the turnaround God to visit you also in this church as you fellowship with us. I want to welcome you today to this home of signs and wonders.</p>
+
+                    <p>And may today's encounter usher you into the realms of ear-tingling testimonies that you have always longed for, in the name of Jesus Christ. Amen.</p>
+
+                    <div class="mt-3">
+                        <h5 class="serif-font mb-1">Pastor Craig Oluwatosin</h5>
+                        <p class="text-muted mb-0 text-primary-custom">(Resident Pastor)</p>
+                    </div>
                 </div>
             </div>
         </div>
