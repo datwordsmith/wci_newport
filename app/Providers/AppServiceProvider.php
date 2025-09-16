@@ -23,9 +23,12 @@ class AppServiceProvider extends ServiceProvider
         // Use Bootstrap 5 pagination views
         Paginator::useBootstrapFive();
 
-        // Set base URL for email templates with assets
+        // Force HTTPS in production
         if (config('app.env') === 'production') {
             \Illuminate\Support\Facades\URL::forceScheme('https');
+
+            // Force HTTPS for all routes
+            $this->app['request']->server->set('HTTPS', true);
         }
     }
 }
