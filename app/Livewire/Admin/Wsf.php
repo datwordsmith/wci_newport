@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Livewire\WithPagination;
-use App\Models\WSF as WsfModel;
+use App\Models\Wsf as WsfModel;
 
 #[Layout('layouts.admin')]
 class Wsf extends Component
