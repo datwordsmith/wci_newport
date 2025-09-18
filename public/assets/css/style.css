@@ -138,6 +138,8 @@
         /* Hero Section */
         .hero-section {
             background: linear-gradient(135deg, rgba(44, 62, 80, 0.6), rgba(44, 62, 80, 0.7)),
+                        url('../images/hero_005.webp') center/cover;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.6), rgba(44, 62, 80, 0.7)),
                         url('../images/hero_005.png') center/cover;
             color: white;
             padding: 0;
@@ -746,7 +748,7 @@
         /* About Us Hero Styles */
         .about-hero {
             background: linear-gradient(135deg, rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.8)),
-                        url('../images/church.jpg') center/cover;
+                        url('../images/church.webp') center/cover;
             color: white;
             padding: 0;
             text-align: center;
