@@ -38,6 +38,9 @@
 
     <!-- Hero Section -->
     <section class="about-hero">
+        <div class="hero-loader" aria-label="Loading hero image">
+            <img src="{{ asset('assets/images/lfww_logo.png') }}" alt="WCI Newport Logo" class="hero-logo-spinner" width="60" height="60">
+        </div>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center py-3">
@@ -108,6 +111,50 @@
             });
         });
     </script>
+
+        <script>
+                    // Hide about hero loader when background image is ready (with minimum visible time)
+                (function(){
+                    function parseBgUrl(el){
+                        const bg = getComputedStyle(el).backgroundImage;
+                        const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+                        return match ? match[1] : null;
+                    }
+                    function preload(src){
+                            return new Promise(function(resolve){
+                                if(!src){ return resolve(); }
+                                const img = new Image();
+                                img.onload = function(){
+                                    if (img.decode) {
+                                        img.decode().catch(()=>{}).finally(resolve);
+                                    } else {
+                                        resolve();
+                                    }
+                                };
+                                img.onerror = function(){ resolve(); };
+                                img.src = src;
+                            });
+                    }
+                    function ready(){
+                        const hero = document.querySelector('section.about-hero');
+                        if(!hero){ return; }
+                            const start = Date.now();
+                            const minVisible = 500; // ms
+                        const src = parseBgUrl(hero);
+                            const timeout = new Promise(r => setTimeout(r, 2000));
+                            Promise.race([preload(src), timeout]).then(function(){
+                                const elapsed = Date.now() - start;
+                                const remaining = Math.max(0, minVisible - elapsed);
+                                setTimeout(function(){ hero.classList.add('hero-loaded'); }, remaining);
+                            });
+                    }
+                    if(document.readyState === 'complete' || document.readyState === 'interactive'){
+                        ready();
+                    } else {
+                        document.addEventListener('DOMContentLoaded', ready);
+                    }
+                })();
+        </script>
 
     <script>
         // Function to handle offcanvas closing and navigation

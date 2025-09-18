@@ -34,6 +34,9 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section">
+        <div class="hero-loader" aria-label="Loading hero image">
+            <img src="{{ asset('assets/images/lfww_logo.png') }}" alt="WCI Newport Logo" class="hero-logo-spinner" width="72" height="72">
+        </div>
         <div class="container">
             <div class="row align-items-center">
                 @hasSection('hero-service-info')
@@ -219,6 +222,49 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Hide hero loader when background image is ready (with minimum visible time)
+            (function(){
+                function parseBgUrl(el){
+                    const bg = getComputedStyle(el).backgroundImage;
+                    const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+                    return match ? match[1] : null;
+                }
+                function preload(src){
+                    return new Promise(function(resolve){
+                        if(!src){ return resolve(); }
+                        const img = new Image();
+                        img.onload = function(){
+                            if (img.decode) {
+                                img.decode().catch(()=>{}).finally(resolve);
+                            } else {
+                                resolve();
+                            }
+                        };
+                        img.onerror = function(){ resolve(); };
+                        img.src = src;
+                    });
+                }
+                function ready(){
+                    const hero = document.querySelector('section.hero-section');
+                    if(!hero){ return; }
+                    const start = Date.now();
+                    const minVisible = 1200; // ms
+                    const src = parseBgUrl(hero);
+                    const hardTimeout = new Promise(r => setTimeout(r, 3500));
+                    Promise.race([preload(src), hardTimeout]).then(function(){
+                        const elapsed = Date.now() - start;
+                        const remaining = Math.max(0, minVisible - elapsed);
+                        setTimeout(function(){ hero.classList.add('hero-loaded'); }, remaining);
+                    });
+                }
+                if(document.readyState === 'complete' || document.readyState === 'interactive'){
+                    ready();
+                } else {
+                    document.addEventListener('DOMContentLoaded', ready);
+                }
+            })();
+        </script>
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
