@@ -112,7 +112,7 @@
             Showing {{ $wsfs->firstItem() ?? 0 }} to {{ $wsfs->lastItem() ?? 0 }} of {{ $wsfs->total() }} results
         </div>
         <div>
-            {{ $wsfs->links('pagination::bootstrap-5') }}
+            {{ $wsfs->links() }}
         </div>
     </div>
     @endif

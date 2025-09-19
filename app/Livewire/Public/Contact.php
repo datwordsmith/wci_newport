@@ -46,7 +46,7 @@ class Contact extends Component
             'email' => 'required|email|max:100',
             'phone' => 'nullable|string|max:20',
             'subject' => 'required|string|max:100',
-            'category' => 'required|string|in:giving,wsf,service_unit,programmes_events,testimonies,general',
+            'category' => 'required|string|in:' . implode(',', array_keys($this->categoryOptions)),
             'message' => 'required|string|min:10|max:1000',
         ];
     }
