@@ -3,27 +3,20 @@
 
     @if($nextSundayService)
         @section('hero-service-info')
-            {{-- @if($nextSundayService->sunday_poster)
-                <!-- Show poster on mobile, text on desktop -->
-                <div class="d-block d-md-none sunday-poster-mobile mt-3">
-                    <img src="{{ asset('storage/' . $nextSundayService->sunday_poster) }}"
-                         alt="{{ $nextSundayService->sunday_theme }}"
-                         class="img-fluid rounded shadow-lg">
-                </div>
-                <div class="service-info mt-3 d-none d-md-block">
-                    <h5 class="text-warning mb-2">{{ \Carbon\Carbon::parse($nextSundayService->service_date)->format('l, F j, Y') }}</h5>
-                    <h4 class="mb-2">{{ $nextSundayService->sunday_theme }}</h4>
-                    <p class="text-light mb-0">{{ \Carbon\Carbon::parse($nextSundayService->service_time)->format('g:i A') }}</p>
-                </div>
-            @else --}}
-                <!-- Show service info when no poster available -->
-                <h3>Next Sunday</h3>
+                <!-- Show service info -->
+                <h3>
+                    @if(\Carbon\Carbon::parse($nextSundayService->service_date)->isToday())
+                        Today's Service
+                    @else
+                        Next Sunday
+                    @endif
+                </h3>
                 <div class="service-info mt-3">
                     <h5 class="text-warning mb-2">{{ \Carbon\Carbon::parse($nextSundayService->service_date)->format('l, F j, Y') }}</h5>
                     <h4 class="mb-2">{{ $nextSundayService->sunday_theme }}</h4>
                     <p class="text-light mb-0"><i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($nextSundayService->service_time)->format('g:i A') }}</p>
                 </div>
-            {{-- @endif --}}
+
         @endsection
     @endif
 
