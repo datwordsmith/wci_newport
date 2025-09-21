@@ -175,6 +175,21 @@
         </div>
     </section>
 
+    <!-- WSF Call to Action -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <h2 class="serif-font mb-3">Connect with a Local Fellowship</h2>
+                    <p class="lead mb-4">Join a Winners Satellite Fellowship in your area for closer community, prayer, and fellowship with believers near you.</p>
+                    <a href="{{ route('wsf') }}#wsfLocations" class="btn btn-lg btn-primary-custom">
+                        <i class="fas fa-map-marker-alt me-2"></i>Find a WSF Near You
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="get-in-touch">
         <div class="container">
                 <div class="text-center my-5">
@@ -196,7 +211,7 @@
                                 <i class="fas fa-address-card"></i>
                             </div>
                             <p><i class="fas fa-phone me-2"></i>07901 024213<br>
-                            <i class="fas fa-envelope me-2"></i>hello@winnerschapelnewport.org.uk</p>
+                            <i class="fas fa-envelope me-2"></i>newport@winners-chapel.org.uk</p>
                         </div>
                     </div>
                 </div>
