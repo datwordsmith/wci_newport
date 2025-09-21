@@ -44,7 +44,7 @@ class SundayService extends Component
         'sunday_poster.required' => 'Please select a poster image.',
         'sunday_poster.image' => 'The file must be an image.',
         'sunday_poster.mimes' => 'The poster must be a PNG or JPEG file.',
-        'sunday_poster.max' => 'The poster size must not exceed 2MB.',
+        'sunday_poster.max' => 'The poster size must not exceed 10MB.',
         'service_date.unique_datetime' => 'A service already exists for this date and time.',
     ];
 
@@ -71,6 +71,12 @@ class SundayService extends Component
      */
     private function resizeImageIfNeeded($uploadedFile)
     {
+        // Check if GD extension is available
+        if (!extension_loaded('gd')) {
+            \Log::warning('GD extension not available for image resizing');
+            return $uploadedFile;
+        }
+
         // If file is already under 2MB, return as is
         if ($uploadedFile->getSize() <= 2048 * 1024) { // 2MB in bytes
             return $uploadedFile;
@@ -78,9 +84,17 @@ class SundayService extends Component
 
         try {
             $originalPath = $uploadedFile->getPathname();
+
+            // Check if file exists and is readable
+            if (!file_exists($originalPath) || !is_readable($originalPath)) {
+                \Log::warning('Image file not readable: ' . $originalPath);
+                return $uploadedFile;
+            }
+
             $imageInfo = getimagesize($originalPath);
 
             if (!$imageInfo) {
+                \Log::warning('Invalid image file: ' . $originalPath);
                 return $uploadedFile; // Not a valid image, let validation handle it
             }
 
@@ -88,22 +102,33 @@ class SundayService extends Component
             $height = $imageInfo[1];
             $mimeType = $imageInfo['mime'];
 
+            // Check memory limit before processing large images
+            $memoryLimit = ini_get('memory_limit');
+            $requiredMemory = ($width * $height * 4); // Rough estimate
+            if ($memoryLimit !== '-1' && $requiredMemory > (int)$memoryLimit * 1024 * 1024 * 0.5) {
+                \Log::warning('Image too large for available memory: ' . $width . 'x' . $height);
+                return $uploadedFile;
+            }
+
             // Create image resource based on type
+            $sourceImage = null;
             switch ($mimeType) {
                 case 'image/jpeg':
-                    $sourceImage = imagecreatefromjpeg($originalPath);
+                    $sourceImage = @imagecreatefromjpeg($originalPath);
                     break;
                 case 'image/png':
-                    $sourceImage = imagecreatefrompng($originalPath);
+                    $sourceImage = @imagecreatefrompng($originalPath);
                     break;
                 case 'image/jpg':
-                    $sourceImage = imagecreatefromjpeg($originalPath);
+                    $sourceImage = @imagecreatefromjpeg($originalPath);
                     break;
                 default:
+                    \Log::warning('Unsupported image format: ' . $mimeType);
                     return $uploadedFile; // Unsupported format
             }
 
             if (!$sourceImage) {
+                \Log::warning('Failed to create image resource from: ' . $originalPath);
                 return $uploadedFile;
             }
 
@@ -125,7 +150,11 @@ class SundayService extends Component
                 }
 
                 // Create new image
-                $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+                $resizedImage = @imagecreatetruecolor($newWidth, $newHeight);
+                if (!$resizedImage) {
+                    \Log::warning('Failed to create resized image canvas');
+                    break;
+                }
 
                 // Preserve transparency for PNG
                 if ($mimeType === 'image/png') {
@@ -136,30 +165,37 @@ class SundayService extends Component
                 }
 
                 // Resize the image
-                imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                $resizeResult = @imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                if (!$resizeResult) {
+                    \Log::warning('Failed to resize image');
+                    imagedestroy($resizedImage);
+                    break;
+                }
 
-                // Create temporary file
-                $tempPath = tempnam(sys_get_temp_dir(), 'resized_poster_');
+                // Create temporary file with proper extension
+                $extension = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION);
+                $tempPath = tempnam(sys_get_temp_dir(), 'resized_poster_') . '.' . $extension;
 
                 // Save based on original format
                 $success = false;
                 switch ($mimeType) {
                     case 'image/jpeg':
                     case 'image/jpg':
-                        $success = imagejpeg($resizedImage, $tempPath, $quality);
+                        $success = @imagejpeg($resizedImage, $tempPath, $quality);
                         break;
                     case 'image/png':
                         // PNG compression level (0-9, where 9 is max compression)
                         $pngQuality = 9 - (int)(($quality / 100) * 9);
-                        $success = imagepng($resizedImage, $tempPath, $pngQuality);
+                        $success = @imagepng($resizedImage, $tempPath, $pngQuality);
                         break;
                 }
 
                 imagedestroy($resizedImage);
 
-                if (!$success) {
+                if (!$success || !file_exists($tempPath)) {
+                    \Log::warning('Failed to save resized image to: ' . $tempPath);
                     if (file_exists($tempPath)) {
-                        unlink($tempPath);
+                        @unlink($tempPath);
                     }
                     break;
                 }
@@ -169,7 +205,6 @@ class SundayService extends Component
                 // If under 2MB, create new UploadedFile and return
                 if ($newSize <= 2048 * 1024) {
                     $originalName = $uploadedFile->getClientOriginalName();
-                    $originalExtension = $uploadedFile->getClientOriginalExtension();
 
                     // Create new UploadedFile instance
                     $resizedUploadedFile = new \Illuminate\Http\UploadedFile(
@@ -186,7 +221,7 @@ class SundayService extends Component
 
                 // Clean up temp file for next iteration
                 if (file_exists($tempPath)) {
-                    unlink($tempPath);
+                    @unlink($tempPath);
                 }
 
                 // Reduce quality for next iteration
@@ -198,7 +233,11 @@ class SundayService extends Component
 
         } catch (\Exception $e) {
             // If resizing fails, return original file
-            \Log::warning('Image resize failed: ' . $e->getMessage());
+            \Log::error('Image resize failed: ' . $e->getMessage(), [
+                'file' => $uploadedFile->getClientOriginalName(),
+                'size' => $uploadedFile->getSize(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
 
         return $uploadedFile; // Return original if resizing failed
@@ -263,7 +302,7 @@ class SundayService extends Component
         // Modify validation rules for update - poster is optional if editing
         $updateRules = [
             'sunday_theme' => 'required|string|max:255',
-            'sunday_poster' => 'nullable|image|mimes:png,jpeg,jpg|max:2048',
+            'sunday_poster' => 'nullable|image|mimes:png,jpeg,jpg|max:10240', // Match store method - 10MB
             'service_date' => 'required|date',
             'service_time' => 'required',
         ];
