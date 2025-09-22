@@ -19,11 +19,12 @@ class Events extends Component
     public $description = 'See all our upcoming events and activities.';
 
     public $nextSundayService = null;
-
+    public $featuredEvent = null;
 
     public function mount()
     {
         $this->loadNextSundayService();
+        $this->loadFeaturedEvent();
     }
 
     private function loadNextSundayService()
@@ -36,6 +37,15 @@ class Events extends Component
             ->orderBy('service_date', 'asc')
             ->orderBy('service_time', 'asc')
             ->first(); // Get only the next service
+    }
+
+    private function loadFeaturedEvent()
+    {
+        // Get the next upcoming event for featured display
+        $this->featuredEvent = Event::where('event_date', '>=', Carbon::now()->toDateString())
+            ->orderBy('event_date')
+            ->orderBy('start_time')
+            ->first();
     }
 
     public function render()

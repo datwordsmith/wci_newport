@@ -27,6 +27,8 @@
     <style>
 
     </style>
+    
+    @stack('meta')
 </head>
 <body>
     <!-- Top Navigation -->
