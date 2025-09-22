@@ -302,16 +302,71 @@
 <script>
 let currentEvent = null;
 
-function openCalendarOptions(eventId) {
-    @if($upcomingEvents && count($upcomingEvents) > 0)
-    const events = @json($upcomingEvents);
-    currentEvent = events.find(event => event.id == eventId);
-    const modal = new bootstrap.Modal(document.getElementById('calendarOptionsModal'));
-    modal.show();
-    @endif
-}
+// Define functions in global scope
+window.shareEvent = function(event) {
+    console.log('Share event called:', event); // Debug log
 
-function addToGoogleCalendar(event) {
+    // Update meta tags for better social sharing
+    if (typeof window.updateEventMeta === 'function') {
+        window.updateEventMeta(event);
+    }
+
+    // Create a URL-friendly slug from the event title
+    const titleSlug = event.title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+    // Create a shareable URL that includes the event ID and title
+    const eventUrl = `${window.location.origin}/events#event-${event.id}-${titleSlug}`;
+    const shareTitle = `${event.title} - Winners Chapel International Newport`;
+    const shareText = event.description ?
+        `Join us for ${event.title}! ${event.description.substring(0, 100)}${event.description.length > 100 ? '...' : ''}` :
+        `Join us for ${event.title}!`;
+
+    console.log('Share URL:', eventUrl); // Debug log
+
+    if (navigator.share) {
+        console.log('Using native share API'); // Debug log
+        navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: eventUrl
+        })
+        .then(() => console.log('Share successful'))
+        .catch(error => console.log('Error sharing:', error));
+    } else {
+        console.log('Using fallback share method'); // Debug log
+
+        // Fallback for browsers that don't support Web Share API
+        const tempInput = document.createElement('input');
+        tempInput.value = eventUrl;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+        try {
+            const successful = document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            if (successful) {
+                console.log('Copy successful'); // Debug log
+                alert('Event link copied to clipboard!\n\n' + eventUrl);
+            } else {
+                console.log('Copy failed'); // Debug log
+                alert('Could not copy link. Please copy manually:\n\n' + eventUrl);
+            }
+        } catch (err) {
+            console.error('Copy error:', err);
+            document.body.removeChild(tempInput);
+            alert('Could not copy link. Please copy manually:\n\n' + eventUrl);
+        }
+    }
+};
+
+window.addToGoogleCalendar = function(event) {
     const startDate = new Date(event.event_date + ' ' + event.start_time);
     const endDate = event.end_date && event.end_time ?
         new Date(event.end_date + ' ' + event.end_time) :
@@ -335,9 +390,9 @@ function addToGoogleCalendar(event) {
     // Close modal if open
     const modal = bootstrap.Modal.getInstance(document.getElementById('calendarOptionsModal'));
     if (modal) modal.hide();
-}
+};
 
-function addToOutlookCalendar(event) {
+window.addToOutlookCalendar = function(event) {
     const startDate = new Date(event.event_date + ' ' + event.start_time);
     const endDate = event.end_date && event.end_time ?
         new Date(event.end_date + ' ' + event.end_time) :
@@ -356,31 +411,9 @@ function addToOutlookCalendar(event) {
     // Close modal if open
     const modal = bootstrap.Modal.getInstance(document.getElementById('calendarOptionsModal'));
     if (modal) modal.hide();
-}
+};
 
-function shareEvent(event) {
-    if (navigator.share) {
-        navigator.share({
-            title: event.title,
-            text: event.description || 'Join us for this event!',
-            url: window.location.href
-        })
-        .catch(error => console.log('Error sharing:', error));
-    } else {
-        // Fallback for browsers that don't support Web Share API
-        const tempInput = document.createElement('input');
-        tempInput.value = window.location.href;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
-
-        // Show a tooltip or alert that URL was copied
-        alert('Event URL copied to clipboard!');
-    }
-}
-
-function downloadICS(event) {
+window.downloadICS = function(event) {
     const startDate = new Date(event.event_date + ' ' + event.start_time);
     const endDate = event.end_date && event.end_time ?
         new Date(event.end_date + ' ' + event.end_time) :
@@ -420,5 +453,70 @@ function downloadICS(event) {
     // Close modal if open
     const modal = bootstrap.Modal.getInstance(document.getElementById('calendarOptionsModal'));
     if (modal) modal.hide();
+};
+
+function openCalendarOptions(eventId) {
+    @if($upcomingEvents && count($upcomingEvents) > 0)
+    const events = @json($upcomingEvents);
+    currentEvent = events.find(event => event.id == eventId);
+    const modal = new bootstrap.Modal(document.getElementById('calendarOptionsModal'));
+    modal.show();
+    @endif
 }
+
+// Handle deep-linking to specific events
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if URL has an event hash (e.g., #event-123 or #event-123-title-slug)
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#event-')) {
+        // Extract event ID from hash (handle both old and new formats)
+        const eventMatch = hash.match(/#event-(\d+)/);
+        if (eventMatch) {
+            const eventId = eventMatch[1];
+
+            // Find and open the corresponding event modal
+            const eventModal = document.getElementById(`eventModal${eventId}`);
+            if (eventModal) {
+                const modal = new bootstrap.Modal(eventModal);
+                modal.show();
+
+                // Scroll to the events section
+                const eventsSection = document.getElementById('events');
+                if (eventsSection) {
+                    setTimeout(() => {
+                        eventsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }
+            }
+        }
+    }
+});
 </script>
+
+@if($upcomingEvents && count($upcomingEvents) > 0)
+@foreach($upcomingEvents as $event)
+<script>
+// Update URL hash when event modals are opened/closed for event {{ $event->id }}
+document.getElementById('eventModal{{ $event->id }}')?.addEventListener('shown.bs.modal', function() {
+    // Create a URL-friendly slug from the event title
+    const titleSlug = '{{ $event->title }}'
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+    // Update URL hash when modal opens with title slug
+    window.history.pushState(null, null, `#event-{{ $event->id }}-${titleSlug}`);
+});
+
+document.getElementById('eventModal{{ $event->id }}')?.addEventListener('hidden.bs.modal', function() {
+    // Remove hash when modal closes (check for both old and new format)
+    const currentHash = window.location.hash;
+    if (currentHash.startsWith('#event-{{ $event->id }}')) {
+        window.history.pushState(null, null, window.location.pathname + window.location.search);
+    }
+});
+</script>
+@endforeach
+@endif
