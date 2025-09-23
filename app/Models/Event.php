@@ -29,6 +29,11 @@ class Event extends Model
         'end_time' => 'datetime:H:i',
     ];
 
+    public function getSlugAttribute()
+    {
+        return str()->slug($this->title);
+    }
+
     /**
      * Get the formatted event date
      */

@@ -11,6 +11,7 @@ Auth::routes();
 Route::get('/', App\Livewire\Public\Index::class)->name('homepage');
 Route::get('/about', App\Livewire\Public\About::class)->name('about');
 Route::get('/events', App\Livewire\Public\Events::class)->name('events');
+Route::get('/event/{id}/{slug?}', App\Livewire\Public\SingleEvent::class)->name('event.show');
 Route::get('/wsf', App\Livewire\Public\Wsf::class)->name('wsf');
 Route::get('/service-units', App\Livewire\Public\ServiceUnits::class)->name('service_units');
 Route::get('/csr', App\Livewire\Public\Csr::class)->name('csr');
