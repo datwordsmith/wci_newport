@@ -2,11 +2,13 @@
 <script src="{{ asset('assets/js/event-functions.js') }}"></script>
 @endpush
 
-@section('meta')
+@section('title', $event->title . ' - Winners Chapel International Newport')
+
+@push('meta')
     <meta property="og:title" content="{{ $event->title }}" />
     <meta property="og:description" content="{{ strip_tags(Str::limit($event->description, 200)) }}" />
     @if($event->poster)
-    <meta property="og:image" content="{{ Storage::url($event->poster) }}" />
+    <meta property="og:image" content="{{ asset(Storage::url($event->poster)) }}" />
     @else
     <meta property="og:image" content="{{ asset('assets/images/lfww_logo.png') }}" />
     @endif
@@ -17,11 +19,11 @@
     <meta name="twitter:title" content="{{ $event->title }}">
     <meta name="twitter:description" content="{{ strip_tags(Str::limit($event->description, 200)) }}">
     @if($event->poster)
-    <meta name="twitter:image" content="{{ Storage::url($event->poster) }}">
+    <meta name="twitter:image" content="{{ asset(Storage::url($event->poster)) }}">
     @else
     <meta name="twitter:image" content="{{ asset('assets/images/lfww_logo.png') }}">
     @endif
-@endsection
+@endpush
 
 <div>
     <!-- Main Content -->
