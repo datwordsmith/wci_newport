@@ -108,6 +108,11 @@
                                     title="Edit Event">
                                 <i class="fas fa-edit text-primary"></i>
                             </button>
+                            <button wire:click="duplicate({{ $event->id }})"
+                                    class="btn btn-sm btn-outline-light bg-white bg-opacity-75 mb-1"
+                                    title="Duplicate Event">
+                                <i class="fas fa-copy text-secondary"></i>
+                            </button>
                             <button wire:click="confirmDelete({{ $event->id }})"
                                     class="btn btn-sm btn-outline-light bg-white bg-opacity-75"
                                     title="Delete Event">

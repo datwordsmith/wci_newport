@@ -320,6 +320,45 @@ class Event extends Component
         }
     }
 
+    /**
+     * Duplicate an existing event (including poster) and open it for editing
+     */
+    public function duplicate($id)
+    {
+        try {
+            $event = EventModel::findOrFail($id);
+
+            // Copy poster if it exists
+            $newPosterPath = null;
+            if ($event->poster && Storage::disk('public')->exists($event->poster)) {
+                $extension = pathinfo($event->poster, PATHINFO_EXTENSION);
+                $filename = pathinfo($event->poster, PATHINFO_FILENAME);
+                $newPosterPath = 'posters/' . $filename . '-copy-' . time() . '.' . $extension;
+                Storage::disk('public')->copy($event->poster, $newPosterPath);
+            }
+
+            // Create duplicated event record
+            $newEvent = EventModel::create([
+                'title' => $event->title . ' (Copy)',
+                'description' => $event->description,
+                'event_date' => $event->event_date ? $event->event_date->format('Y-m-d') : null,
+                'end_date' => $event->end_date ? $event->end_date->format('Y-m-d') : null,
+                'start_time' => $event->start_time ? $event->start_time->format('H:i') : null,
+                'end_time' => $event->end_time ? $event->end_time->format('H:i') : null,
+                'location' => $event->location,
+                'event_url' => $event->event_url,
+                'poster' => $newPosterPath,
+                'created_by' => auth()->user()->email ?? $event->created_by,
+            ]);
+
+            // Open the newly created event in edit mode
+            $this->dispatch('toastr-success', 'Event duplicated. You can now edit it.');
+            $this->edit($newEvent->id);
+        } catch (\Exception $e) {
+            $this->dispatch('toastr-error', 'Failed to duplicate event: ' . $e->getMessage());
+        }
+    }
+
     public function render()
     {
         $query = EventModel::query();
