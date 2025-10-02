@@ -53,15 +53,9 @@ class Index extends Component
 
     private function loadUpcomingEvents()
     {
-        // Get current date
-        $currentDate = now()->toDateString();
-
-        // Fetch upcoming events (limit to 3 events)
-        $this->upcomingEvents = Event::where('event_date', '>=', $currentDate)
-            ->orderBy('event_date', 'asc')
-            ->orderBy('start_time', 'asc')
-            ->limit(3)
-            ->get();
+        // Get upcoming events with only next occurrence of recurring series (limit to 3 events)
+        $filteredEvents = Event::getUpcomingUniqueRecurring();
+        $this->upcomingEvents = $filteredEvents->take(3);
     }
 
     public function render()

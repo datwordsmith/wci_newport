@@ -50,13 +50,29 @@ class Events extends Component
 
     public function render()
     {
-        $events = Event::where('event_date', '>=', Carbon::now()->toDateString())
-            ->orderBy('event_date')
-            ->orderBy('start_time')
-            ->paginate(9);
+        // Get upcoming events with only next occurrence of recurring series
+        $filteredEvents = Event::getUpcomingUniqueRecurring();
+
+        // Convert to paginated collection
+        $perPage = 9;
+        $currentPage = request()->get('page', 1);
+        $total = $filteredEvents->count();
+        $events = $filteredEvents->forPage($currentPage, $perPage);
+
+        // Create paginator
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator(
+            $events,
+            $total,
+            $perPage,
+            $currentPage,
+            [
+                'path' => request()->url(),
+                'pageName' => 'page',
+            ]
+        );
 
         return view('livewire.public.events', [
-            'upcomingEvents' => $events,
+            'upcomingEvents' => $paginator,
         ]);
     }
 }

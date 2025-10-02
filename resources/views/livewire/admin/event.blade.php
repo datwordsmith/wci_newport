@@ -19,7 +19,7 @@
     </div>
 
     <!-- Search and Filters -->
-    <div class="row mb-4">
+    <div class="row mb-3">
         <div class="col-md-4 col-12 mb-2">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -55,11 +55,24 @@
         </div>
 
         <div class="col-md-3 col-2">
-            @if($search || $filterMonth || $filterYear)
+            @if($search || $filterMonth || $filterYear || $showUpcomingOnly)
                 <button wire:click="clearFilters" class="btn btn-outline-secondary me-2">
                     <i class="fas fa-times"></i> <span class="d-none d-md-inline">Clear Filters</span>
                 </button>
             @endif
+        </div>
+    </div>
+
+    <!-- Additional Filters -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" wire:model.live="showUpcomingOnly" id="upcomingOnly">
+                <label class="form-check-label" for="upcomingOnly">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    Show upcoming events only
+                </label>
+            </div>
         </div>
     </div>
 
@@ -113,6 +126,13 @@
                                     title="Duplicate Event">
                                 <i class="fas fa-copy text-secondary"></i>
                             </button>
+                            @if($event->isRecurringMaster())
+                            <button wire:click="regenerateRecurringInstances({{ $event->id }})"
+                                    class="btn btn-sm btn-outline-light bg-white bg-opacity-75 mb-1"
+                                    title="Regenerate Recurring Instances">
+                                <i class="fas fa-redo text-success"></i>
+                            </button>
+                            @endif
                             <button wire:click="confirmDelete({{ $event->id }})"
                                     class="btn btn-sm btn-outline-light bg-white bg-opacity-75"
                                     title="Delete Event">
@@ -124,7 +144,22 @@
 
                 <!-- Card Body -->
                 <div class="card-body">
-                    <h5 class="card-title mb-2">{{ $event->title }}</h5>
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ $event->title }}</h5>
+                        @if($event->isRecurring())
+                            <div class="ms-2">
+                                @if($event->isRecurringMaster())
+                                    <span class="badge bg-success text-white" style="font-size: 0.7em;">
+                                        <i class="fas fa-redo me-1"></i>{{ $event->getRecurringDescription() }}
+                                    </span>
+                                @elseif($event->isRecurringInstance())
+                                    <span class="badge bg-info text-white" style="font-size: 0.7em;">
+                                        <i class="fas fa-link me-1"></i>{{ $event->getRecurringDescription() }}
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
 
                     @if($event->description)
                     <p class="card-text text-muted small mb-2">{{ Str::limit($event->description, 100) }}</p>
@@ -295,6 +330,50 @@
                                 <input type="time" wire:model="end_time" class="form-control @error('end_time') is-invalid @enderror" id="end_time">
                                 @error('end_time') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 <small class="text-muted">Leave empty if end time is not specified</small>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h6 class="mb-3"><i class="fas fa-redo me-2"></i>Repeat</h6>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="repeat_monthly" wire:model="repeat_monthly">
+                            <label class="form-check-label" for="repeat_monthly">Repeat monthly (single day)</label>
+                        </div>
+
+                        <div class="row" x-data="{ get repeatMonthly() { return $wire.repeat_monthly } }">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Week of month</label>
+                                <select class="form-select @error('repeat_week_of_month') is-invalid @enderror" wire:model="repeat_week_of_month" :disabled="!repeatMonthly">
+                                    <option value="">Select...</option>
+                                    <option value="1">First</option>
+                                    <option value="2">Second</option>
+                                    <option value="3">Third</option>
+                                    <option value="4">Fourth</option>
+                                    <option value="-1">Last</option>
+                                </select>
+                                @error('repeat_week_of_month') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Day of week</label>
+                                <select class="form-select @error('repeat_day_of_week') is-invalid @enderror" wire:model="repeat_day_of_week" :disabled="!repeatMonthly">
+                                    <option value="">Select...</option>
+                                    <option value="0">Sunday</option>
+                                    <option value="1">Monday</option>
+                                    <option value="2">Tuesday</option>
+                                    <option value="3">Wednesday</option>
+                                    <option value="4">Thursday</option>
+                                    <option value="5">Friday</option>
+                                    <option value="6">Saturday</option>
+                                </select>
+                                @error('repeat_day_of_week') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Repeat until</label>
+                                <input type="date" class="form-control @error('repeat_until') is-invalid @enderror" wire:model="repeat_until" :disabled="!repeatMonthly">
+                                @error('repeat_until') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted">When enabled, this will create single-day events on the chosen week/day of each month until the date provided. The first instance is this event's date.</small>
                             </div>
                         </div>
                     </form>

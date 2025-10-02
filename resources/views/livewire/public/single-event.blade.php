@@ -34,7 +34,22 @@
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h4 class="serif-font mb-4">{{ $event->title }}</h4>
+                            <div class="d-flex justify-content-between align-items-start mb-4">
+                                <h4 class="serif-font mb-0">{{ $event->title }}</h4>
+                                @if($event->isRecurring())
+                                    <div class="ms-3">
+                                        @if($event->isRecurringMaster())
+                                            <span class="badge bg-success text-white">
+                                                <i class="fas fa-redo me-1"></i>{{ $event->getRecurringDescription() }}
+                                            </span>
+                                        @elseif($event->isRecurringInstance())
+                                            <span class="badge bg-info text-white">
+                                                <i class="fas fa-link me-1"></i>{{ $event->getRecurringDescription() }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
 
                             @if($event->poster)
                             <div class="d-block d-lg-none mb-4">
@@ -56,6 +71,13 @@
                                 <div class="mb-2">
                                     <i class="fas fa-map-marker-alt me-2"></i>
                                     {{ $event->location }}
+                                </div>
+                                @endif
+
+                                @if($event->isRecurring())
+                                <div class="mb-2">
+                                    <i class="fas fa-redo me-2"></i>
+                                    <span class="text-muted">{{ $event->getRecurringDescription() }}</span>
                                 </div>
                                 @endif
 

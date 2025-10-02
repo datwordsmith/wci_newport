@@ -9,6 +9,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\Event as EventModel;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 #[Layout('layouts.admin')]
 class Event extends Component
@@ -38,10 +39,17 @@ class Event extends Component
     public $poster;
     public $current_poster; // To store current poster path for editing
 
+    // Recurrence (single-day monthly rule)
+    public $repeat_monthly = false;            // bool
+    public $repeat_week_of_month = null;       // 1..5
+    public $repeat_day_of_week = null;         // 0=Sun .. 6=Sat
+    public $repeat_until = null;               // Y-m-d
+
     // Filters
     public $search = '';
     public $filterMonth = '';
     public $filterYear = '';
+    public $showUpcomingOnly = false;
 
     protected $rules = [
         'title' => 'required|string|max:255',
@@ -52,7 +60,12 @@ class Event extends Component
         'end_time' => 'nullable',
         'location' => 'required|string|max:255',
         'event_url' => 'nullable|url|max:500',
-        'poster' => 'nullable|image|mimes:png,jpeg,jpg|max:2048',
+    'poster' => 'nullable|image|mimes:png,jpeg,jpg|max:2048',
+    // Recurrence
+    'repeat_monthly' => 'boolean',
+            'repeat_week_of_month' => 'nullable|integer|min:-1|max:4',
+    'repeat_day_of_week' => 'nullable|integer|min:0|max:6',
+    'repeat_until' => 'nullable|date|after:event_date',
     ];
 
     protected $messages = [
@@ -153,6 +166,12 @@ class Event extends Component
         $this->current_poster = $event->poster;
         $this->poster = null; // Reset file upload
 
+    // Recurrence
+    $this->repeat_monthly = (bool)($event->repeat_monthly ?? false);
+    $this->repeat_week_of_month = $event->repeat_week_of_month;
+    $this->repeat_day_of_week = $event->repeat_day_of_week;
+    $this->repeat_until = $event->repeat_until ? Carbon::parse($event->repeat_until)->format('Y-m-d') : null;
+
         $this->editMode = true;
         $this->showModal = true;
     }
@@ -179,8 +198,8 @@ class Event extends Component
             // Shorten URL if provided
             $shortenedUrl = $this->event_url ? $this->shortenUrl($this->event_url) : null;
 
-            // Create the event record
-            EventModel::create([
+            // Create the base event record
+            $base = EventModel::create([
                 'title' => $this->title,
                 'description' => $this->description,
                 'event_date' => $this->event_date,
@@ -191,7 +210,17 @@ class Event extends Component
                 'event_url' => $shortenedUrl,
                 'poster' => $posterPath,
                 'created_by' => auth()->user()->email ?? 'Unknown',
+                // Recurrence settings
+                'repeat_monthly' => (bool)$this->repeat_monthly,
+                'repeat_week_of_month' => $this->repeat_week_of_month,
+                'repeat_day_of_week' => $this->repeat_day_of_week,
+                'repeat_until' => $this->repeat_until ?: null,
             ]);
+
+            // Generate recurring instances when applicable
+            if ($this->repeat_monthly && $this->repeat_week_of_month && $this->repeat_day_of_week && $this->repeat_until) {
+                $this->generateMonthlyRecurringInstances($base);
+            }
 
             $this->dispatch('toastr-success', 'Event created successfully.');
             $this->dispatch('event-created');
@@ -233,6 +262,11 @@ class Event extends Component
             'event_url' => $shortenedUrl,
             'poster' => $posterPath,
             'created_by' => auth()->user()->email ?? $event->created_by, // Keep existing if no current user
+            // Recurrence settings
+            'repeat_monthly' => (bool)$this->repeat_monthly,
+            'repeat_week_of_month' => $this->repeat_week_of_month,
+            'repeat_day_of_week' => $this->repeat_day_of_week,
+            'repeat_until' => $this->repeat_until ?: null,
         ]);
 
         $this->dispatch('toastr-success', 'Event updated successfully.');
@@ -265,6 +299,7 @@ class Event extends Component
         $this->search = '';
         $this->filterMonth = '';
         $this->filterYear = '';
+        $this->showUpcomingOnly = false;
         $this->resetPage();
     }
 
@@ -282,6 +317,12 @@ class Event extends Component
         $this->current_poster = null;
         $this->eventId = null;
         $this->resetValidation();
+
+    // Recurrence
+    $this->repeat_monthly = false;
+    $this->repeat_week_of_month = null;
+    $this->repeat_day_of_week = null;
+    $this->repeat_until = null;
     }
 
     public function confirmDelete($id)
@@ -317,6 +358,109 @@ class Event extends Component
             $this->closeDeleteModal();
         } catch (\Exception $e) {
             $this->dispatch('toastr-error', 'Failed to delete event: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate child events for a monthly recurring rule like "1st Saturday of every month".
+     */
+    private function generateMonthlyRecurringInstances(EventModel $base): void
+    {
+        $originalDate = Carbon::parse($base->event_date)->startOfDay();
+        $until = Carbon::parse($this->repeat_until)->endOfDay();
+        $today = Carbon::now()->startOfDay();
+
+        // Start from the original event's month, but generate instances starting from today
+        $cursor = $originalDate->copy()->startOfMonth();
+
+        // If original event is in the past, start from current month
+        if ($originalDate->lt($today)) {
+            $cursor = $today->copy()->startOfMonth();
+        }
+
+        while ($cursor->lte($until)) {
+            $target = $this->nthWeekdayOfMonth($cursor->copy(), (int)$this->repeat_week_of_month, (int)$this->repeat_day_of_week);
+
+            if ($target && $target->betweenIncluded($cursor->startOfMonth(), $until)) {
+                // Only create if the target date is today or in the future, and not the same as original event
+                if ($target->gte($today) && !$target->isSameDay($originalDate)) {
+                    EventModel::create([
+                        'title' => $base->title,
+                        'description' => $base->description,
+                        'event_date' => $target->toDateString(),
+                        'end_date' => null,
+                        'start_time' => optional($base->start_time)->format('H:i'),
+                        'end_time' => optional($base->end_time)->format('H:i'),
+                        'location' => $base->location,
+                        'event_url' => $base->event_url,
+                        'poster' => $base->poster,
+                        'created_by' => auth()->user()->email ?? $base->created_by,
+                        'repeat_monthly' => false, // Child events are not themselves recurring
+                        'repeat_week_of_month' => null,
+                        'repeat_day_of_week' => null,
+                        'repeat_until' => null,
+                        'parent_event_id' => $base->id,
+                    ]);
+                }
+            }
+            $cursor->addMonth()->startOfMonth();
+        }
+    }
+
+    /**
+     * Find the Nth weekday in a month (week: 1..4 or -1 for last, weekday: 0=Sun..6=Sat)
+     */
+    private function nthWeekdayOfMonth(Carbon $monthStart, int $week, int $weekday): ?Carbon
+    {
+        $date = $monthStart->copy()->startOfMonth();
+
+        if ($week === -1) {
+            // Find last occurrence of weekday in the month
+            $lastDay = $date->copy()->endOfMonth();
+            $lastWeekday = $lastDay->copy()->previous($weekday);
+            if ($lastDay->dayOfWeek === $weekday) {
+                $lastWeekday = $lastDay->copy();
+            }
+            return $lastWeekday->month === $monthStart->month ? $lastWeekday : null;
+        } else {
+            // Find Nth occurrence (1st, 2nd, 3rd, 4th)
+            $first = $date->copy()->next($weekday);
+            if ($date->dayOfWeek === $weekday) {
+                $first = $date->copy();
+            }
+            $target = $first->copy()->addWeeks($week - 1);
+            return $target->month === $monthStart->month ? $target : null;
+        }
+    }
+
+    /**
+     * Regenerate recurring instances for an existing recurring event
+     */
+    public function regenerateRecurringInstances($eventId)
+    {
+        try {
+            $event = EventModel::findOrFail($eventId);
+            
+            if (!$event->repeat_monthly) {
+                $this->dispatch('toastr-error', 'This is not a recurring event.');
+                return;
+            }
+
+            // Delete existing child events
+            EventModel::where('parent_event_id', $event->id)->delete();
+
+            // Set the recurrence properties temporarily for generation
+            $this->repeat_monthly = $event->repeat_monthly;
+            $this->repeat_week_of_month = $event->repeat_week_of_month;
+            $this->repeat_day_of_week = $event->repeat_day_of_week;
+            $this->repeat_until = $event->repeat_until;
+
+            // Regenerate instances
+            $this->generateMonthlyRecurringInstances($event);
+
+            $this->dispatch('toastr-success', 'Recurring instances regenerated successfully.');
+        } catch (\Exception $e) {
+            $this->dispatch('toastr-error', 'Failed to regenerate instances: ' . $e->getMessage());
         }
     }
 
@@ -369,6 +513,11 @@ class Event extends Component
                 $q->where('title', 'like', '%'.$this->search.'%')
                   ->orWhere('location', 'like', '%'.$this->search.'%');
             });
+        }
+
+        // Apply upcoming events filter
+        if ($this->showUpcomingOnly) {
+            $query->where('event_date', '>=', now()->toDateString());
         }
 
         // Apply month filter

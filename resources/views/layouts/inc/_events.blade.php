@@ -21,7 +21,24 @@
                         </div>
                         <div class="card-body d-flex flex-column h-100">
                             <div>
-                                <h5 class="card-title serif-font">{{ $event->title }}</h5>
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title serif-font mb-0">{{ $event->title }}</h5>
+                                    @if($event->isRecurring())
+                                        <div class="ms-2">
+                                            @if($event->isRecurringMaster())
+                                                <span class="badge bg-success text-white" 
+                                                      style="font-size: 0.65em;">
+                                                    <i class="fas fa-redo me-1"></i>{{ $event->getRecurringDescription() }}
+                                                </span>
+                                            @elseif($event->isRecurringInstance())
+                                                <span class="badge bg-info text-white" 
+                                                      style="font-size: 0.65em;">
+                                                    <i class="fas fa-link me-1"></i>{{ $event->getRecurringDescription() }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
                                 @if($event->description)
                                     <p class="card-text">{{ Str::limit($event->description, 150) }}</p>
                                 @else
