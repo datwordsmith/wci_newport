@@ -51,6 +51,10 @@
             color: var(--primary-color);
         }
 
+        .bg-accent {
+            background-color: var(--primary-color) !important;
+        }
+
         /* Adjust main navbar to account for top nav */
         .main-nav {
             top: 40px;
