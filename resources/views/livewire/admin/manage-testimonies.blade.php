@@ -9,6 +9,9 @@
                         <p class="text-muted mb-0">Review, approve, or decline submitted testimonies</p>
                     </div>
                     <div class="text-end">
+                        <a href="{{ route('admin.testimonies.create') }}" class="btn btn-primary-custom mb-1">
+                            <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Add Testimony</span>
+                        </a>
                         <div class="small text-muted">
                             <i class="fas fa-clock me-1"></i>
                             Last updated: {{ now()->format('M j, Y g:i A') }}

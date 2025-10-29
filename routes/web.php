@@ -34,6 +34,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Moderator can manage testimonies
     Route::middleware(['role:moderator,administrator,super_admin'])->group(function () {
         Route::get('testimonies', \App\Livewire\Admin\ManageTestimonies::class)->name('testimonies.manage');
+        Route::get('testimonies/create', \App\Livewire\Admin\CreateTestimony::class)->name('testimonies.create');
         Route::get('testimonies/{id}', \App\Livewire\Admin\ViewTestimony::class)->name('testimonies.view');
     });
 
