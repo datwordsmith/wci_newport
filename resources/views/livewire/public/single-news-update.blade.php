@@ -2,94 +2,132 @@
     @section('description', \Illuminate\Support\Str::limit(strip_tags($newsUpdate->excerpt ?: $newsUpdate->body), 160))
 
     @push('meta')
-        <meta property="og:title" content="{{ $newsUpdate->title }} — WCI Newport" />
+        <meta property="og:title" content="{{ $newsUpdate->title }}" />
         <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($newsUpdate->excerpt ?: $newsUpdate->body), 160) }}" />
         <meta property="og:type" content="article" />
         <meta property="og:url" content="{{ route('news_update.show', $newsUpdate->slug) }}" />
     @endpush
 
+    @section('content')
     <section class="py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-
-                    <!-- Back link -->
-                    <a href="{{ route('news_updates') }}" class="text-muted small mb-4 d-inline-block">
-                        <i class="fas fa-arrow-left me-1"></i> Back to News &amp; Updates
-                    </a>
-
-                    <div class="card shadow-sm">
+                    <div class="card shadow">
                         <div class="card-body p-4 p-md-5">
 
-                            <!-- Meta badges -->
-                            <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
-                                @if($newsUpdate->source)
-                                    <span class="badge bg-secondary">{{ $newsUpdate->source }}</span>
-                                @endif
-                                @if($newsUpdate->is_featured)
-                                    <span class="badge bg-warning text-dark"><i class="fas fa-star me-1"></i>Featured</span>
-                                @endif
-                                <small class="text-muted ms-auto">
-                                    <i class="fas fa-calendar-alt me-1"></i>
-                                    {{ $newsUpdate->published_at->format('F j, Y') }}
-                                </small>
+                            <!-- Top bar: back + action buttons -->
+                            <div class="mb-4 d-flex justify-content-between align-items-center">
+                                <a href="{{ route('news_updates') }}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to News &amp; Updates
+                                </a>
+                                <div class="d-flex gap-2">
+                                    <button onclick="printNews()" class="btn btn-primary-custom btn-sm" title="Print">
+                                        <i class="fas fa-print"></i>
+                                    </button>
+                                    <button onclick="shareNews()" class="btn btn-primary-custom btn-sm" title="Share">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Title -->
-                            <h1 class="h3 serif-font mb-2">{{ $newsUpdate->title }}</h1>
-
-                            @if($newsUpdate->author_name)
-                                <p class="text-muted small mb-4">By {{ $newsUpdate->author_name }}</p>
-                            @endif
+                            <!-- Header -->
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    @if($newsUpdate->source)
+                                        <span class="badge bg-secondary">{{ $newsUpdate->source }}</span>
+                                    @endif
+                                    @if($newsUpdate->is_featured)
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-star me-1"></i>Featured</span>
+                                    @endif
+                                    <small class="text-muted ms-auto">
+                                        {{ $newsUpdate->published_at->format('M j, Y') }}
+                                    </small>
+                                </div>
+                                <h2 class="mb-1">{{ $newsUpdate->title }}</h2>
+                                @if($newsUpdate->author_name)
+                                    <p class="text-muted mb-0">by {{ $newsUpdate->author_name }}</p>
+                                @endif
+                            </div>
 
                             @if($newsUpdate->excerpt)
                                 <p class="lead text-muted border-start border-3 ps-3 mb-4">{{ $newsUpdate->excerpt }}</p>
                             @endif
 
-                            <hr class="mb-4">
-
-                            <!-- Body content from Quill -->
-                            <div class="news-body ql-editor" style="padding: 0;">
-                                {!! $newsUpdate->body !!}
+                            <!-- Body -->
+                            <div class="news-content mb-4 p-4 bg-light rounded">
+                                <div class="news-body ql-editor" style="padding:0;">
+                                    {!! $newsUpdate->body !!}
+                                </div>
                             </div>
 
                             <!-- Attachment -->
                             @if($newsUpdate->attachment_path)
-                                <div class="mt-5 p-3 bg-light rounded d-flex align-items-center gap-3">
-                                    <i class="fas fa-paperclip fa-lg text-muted"></i>
-                                    <div>
-                                        <div class="fw-semibold small">Attachment</div>
-                                        <a href="{{ asset('storage/' . $newsUpdate->attachment_path) }}"
-                                           target="_blank"
-                                           class="text-decoration-none">
-                                            {{ $newsUpdate->attachment_original_name ?? 'Download file' }}
-                                            <i class="fas fa-download ms-1 small"></i>
-                                        </a>
-                                    </div>
+                                <div class="mb-4">
+                                    <h6 class="text-muted mb-2">Attachment</h6>
+                                    <a href="{{ asset('storage/' . $newsUpdate->attachment_path) }}"
+                                       target="_blank"
+                                       class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-download me-2"></i>
+                                        {{ $newsUpdate->attachment_original_name ?? 'Download file' }}
+                                    </a>
                                 </div>
                             @endif
 
+                            <!-- Bottom CTA -->
+                            <div class="d-flex justify-content-end align-items-center mt-4">
+                                <a href="{{ route('news_updates') }}" class="btn btn-primary-custom">
+                                    <i class="fas fa-newspaper me-2"></i>All News &amp; Updates
+                                </a>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- Bottom nav -->
-                    <div class="mt-4 text-center">
-                        <a href="{{ route('news_updates') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>All News &amp; Updates
-                        </a>
-                    </div>
-
                 </div>
             </div>
         </div>
     </section>
+    @endsection
 
     @push('scripts')
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <style>
-        /* Show Quill content without editor chrome */
-        .news-body.ql-editor { font-size: 1rem; line-height: 1.7; }
-        .news-body.ql-editor:focus { outline: none; }
+        .news-body.ql-editor { font-size: 1rem; line-height: 1.7; padding: 0; }
     </style>
+    <script>
+        function shareNews() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ addslashes($newsUpdate->title) }}',
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                const tmp = document.createElement('input');
+                document.body.appendChild(tmp);
+                tmp.value = window.location.href;
+                tmp.select();
+                document.execCommand('copy');
+                document.body.removeChild(tmp);
+                alert('Link copied to clipboard!');
+            }
+        }
+
+        function printNews() {
+            const content = document.querySelector('.card');
+            const original = document.body.innerHTML;
+            document.body.innerHTML = `
+                <div style="max-width:800px;margin:20px auto;font-family:Arial,sans-serif;">
+                    <h2 style="text-align:center;margin-bottom:5px;">Winners Chapel International Newport</h2>
+                    <h3 style="text-align:center;margin-bottom:30px;">News &amp; Updates</h3>
+                    ${content.innerHTML}
+                    <p style="color:#666;text-align:center;font-size:12px;margin-top:30px;">
+                        Printed from WCI Newport | ${new Date().toLocaleDateString()}
+                    </p>
+                </div>`;
+            window.print();
+            document.body.innerHTML = original;
+            window.Livewire && window.Livewire.rescan && window.Livewire.rescan();
+        }
+    </script>
     @endpush
 </div>
