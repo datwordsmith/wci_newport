@@ -110,6 +110,9 @@
     <!-- Events Section -->
     @yield('events')
 
+    <!-- News & Updates Section -->
+    @yield('news')
+
     <!-- Testimonies Hero Section -->
     <section class="testimonies-hero">
         <div class="container">

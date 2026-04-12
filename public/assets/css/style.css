@@ -98,14 +98,31 @@
             transition: width 0.25s ease;
         }
 
+        /* Restore Bootstrap dropdown caret (overridden by the underline ::after above) */
+        .navbar .nav-link-custom.dropdown-toggle::after {
+            content: '';
+            display: inline-block;
+            position: static;
+            width: auto;
+            height: auto;
+            background: none;
+            margin-left: 0.3em;
+            vertical-align: 0.15em;
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+            transition: none;
+        }
+
         /* Hover: no underline, just change text color */
         .navbar .nav-link-custom:hover {
             color: var(--accent-color);
         }
 
-        /* Active shows primary color underline */
-        .navbar .nav-link-custom.active::after,
-        .navbar .nav-link-custom:focus-visible::after {
+        /* Active shows primary color underline (not on dropdown toggles — they use a caret instead) */
+        .navbar .nav-link-custom.active:not(.dropdown-toggle)::after,
+        .navbar .nav-link-custom:focus-visible:not(.dropdown-toggle)::after {
             width: 100%;
             background: var(--primary-color);
         }

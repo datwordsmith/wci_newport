@@ -18,6 +18,8 @@ Route::get('/csr', App\Livewire\Public\Csr::class)->name('csr');
 Route::get('/testimonies', App\Livewire\Public\Testimonies::class)->name('testimonies');
 Route::get('/testimonies/create', App\Livewire\Public\CreateTestimony::class)->name('testimonies.create');
 Route::get('/testimony/{id}', App\Livewire\Public\Testimony::class)->name('testimony');
+Route::get('/news-updates', App\Livewire\Public\NewsUpdates::class)->name('news_updates');
+Route::get('/news-updates/{slug}', App\Livewire\Public\SingleNewsUpdate::class)->name('news_update.show');
 Route::get('/giving', App\Livewire\Public\Giving::class)->name('giving');
 Route::get('/contact', App\Livewire\Public\Contact::class)->name('contact');
 

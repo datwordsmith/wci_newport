@@ -8,6 +8,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use App\Models\SundayService;
 use App\Models\Event;
+use App\Models\NewsUpdate;
 
 #[Layout('layouts.homepage')]
 class Index extends Component
@@ -17,11 +18,13 @@ class Index extends Component
     public $description = "Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith";
     public $nextSundayService = null;
     public $upcomingEvents = [];
+    public $latestNews = [];
 
     public function mount()
     {
         $this->loadNextSundayService();
         $this->loadUpcomingEvents();
+        $this->loadLatestNews();
     }
 
     #[On('sunday-service-updated')]
@@ -58,11 +61,20 @@ class Index extends Component
         $this->upcomingEvents = $filteredEvents->take(3);
     }
 
+    private function loadLatestNews()
+    {
+        $this->latestNews = NewsUpdate::published()
+            ->orderByDesc('published_at')
+            ->take(3)
+            ->get();
+    }
+
     public function render()
     {
         return view('livewire.public.index', [
             'nextSundayService' => $this->nextSundayService,
-            'upcomingEvents' => $this->upcomingEvents
+            'upcomingEvents' => $this->upcomingEvents,
+            'latestNews' => $this->latestNews,
         ]);
     }
 }

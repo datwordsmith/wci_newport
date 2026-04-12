@@ -56,6 +56,10 @@
         @include('layouts.inc._events', ['upcomingEvents' => $upcomingEvents])
     @endsection
 
+    @section('news')
+        @include('layouts.inc._news-updates', ['latestNews' => $latestNews])
+    @endsection
+
     @section('next-sunday-service')
         @if($nextSundayService)
             <div class="next-sunday-service">
