@@ -28,6 +28,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::middleware(['role:editor,administrator,super_admin'])->group(function () {
         Route::get('sunday-service', \App\Livewire\Admin\SundayService::class)->name('sunday_service');
         Route::get('events', \App\Livewire\Admin\Event::class)->name('events');
+        Route::get('news-updates', \App\Livewire\Admin\NewsUpdates::class)->name('news_updates');
+        Route::get('news-updates/create', \App\Livewire\Admin\NewsUpdateForm::class)->name('news_updates.create');
+        Route::get('news-updates/{newsId}/edit', \App\Livewire\Admin\NewsUpdateForm::class)->name('news_updates.edit');
         Route::get('wsf', \App\Livewire\Admin\Wsf::class)->name('wsf');
     });
 

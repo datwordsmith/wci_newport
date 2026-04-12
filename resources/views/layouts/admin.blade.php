@@ -639,6 +639,12 @@
           </a>
         </div>
         <div class="nav-item">
+          <a href="{{ route('admin.news_updates') }}" class="nav-link {{ request()->routeIs('admin.news_updates') ? 'active' : '' }}">
+            <i class="fas fa-rss"></i>
+            <span>News & Updates</span>
+          </a>
+        </div>
+        <div class="nav-item">
           <a href="{{ route('admin.wsf') }}" class="nav-link {{ request()->routeIs('admin.wsf') ? 'active' : '' }}">
             <i class="fas fa-users"></i>
             <span>WSF</span>
