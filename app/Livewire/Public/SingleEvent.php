@@ -22,9 +22,13 @@ class SingleEvent extends Component
         }
     }
 
-    #[Title('Event Details')]
     public function render()
     {
-        return view('livewire.public.single-event');
+        return view('livewire.public.single-event')
+            ->title($this->event->title)
+            ->layoutData([
+                'description' => strip_tags(\Illuminate\Support\Str::limit($this->event->description, 200)),
+                'og_image' => $this->event->poster ? asset('storage/' . $this->event->poster) : null,
+            ]);
     }
 }

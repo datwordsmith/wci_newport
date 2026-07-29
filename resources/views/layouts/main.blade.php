@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="@yield('description', 'Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith')">
+    <meta name="description" content="{{ $description ?? 'Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith' }}">
     <title>{{ $title.' - Winners Chapel International, Newport' }}</title>
 
     @include('layouts.inc._meta')

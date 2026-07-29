@@ -19,6 +19,10 @@ class SingleNewsUpdate extends Component
     public function render()
     {
         return view('livewire.public.single-news-update')
-            ->title($this->newsUpdate->title . ' — WCI Newport');
+            ->title($this->newsUpdate->title)
+            ->layoutData([
+                'description' => strip_tags(\Illuminate\Support\Str::limit($this->newsUpdate->excerpt ?: $this->newsUpdate->body, 160)),
+                'og_image' => $this->newsUpdate->image_path ? asset('storage/' . $this->newsUpdate->image_path) : null,
+            ]);
     }
 }

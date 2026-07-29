@@ -2,12 +2,6 @@
 <script src="{{ asset('assets/js/event-functions.js') }}"></script>
 @endpush
 
-@section('title', $event->title . ' - Winners Chapel International Newport')
-@section('description', strip_tags(Str::limit($event->description, 200)))
-@if($event->poster)
-    @section('og_image', asset('storage/' . $event->poster))
-@endif
-
 @push('meta')
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{ route('event.show', ['id' => $event->id, 'slug' => $event->slug]) }}" />
