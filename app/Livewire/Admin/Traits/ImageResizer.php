@@ -80,7 +80,7 @@ trait ImageResizer
                 return $uploadedFile;
             }
 
-            // Calculate new dimensions (reduce by 20% each time until under target or max 3 iterations)
+            // Calculate new dimensions (reduce by 15% each time until under target or max 4 iterations)
             $maxIterations = 4;
             $iteration = 0;
             $quality = 85; // Start with high quality
@@ -104,13 +104,9 @@ trait ImageResizer
                     break;
                 }
 
-                // Preserve transparency for PNG
-                if ($mimeType === 'image/png') {
-                    imagealphablending($resizedImage, false);
-                    imagesavealpha($resizedImage, true);
-                    $transparent = imagecolorallocatealpha($resizedImage, 255, 255, 255, 127);
-                    imagefill($resizedImage, 0, 0, $transparent);
-                }
+                // Fill with white background (in case of transparent PNG/WebP converted to JPEG)
+                $white = imagecolorallocate($resizedImage, 255, 255, 255);
+                imagefill($resizedImage, 0, 0, $white);
 
                 // Resize the image
                 $resizeResult = @imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
@@ -120,23 +116,11 @@ trait ImageResizer
                     break;
                 }
 
-                // Create temporary file with proper extension
-                $extension = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION);
-                $tempPath = tempnam(sys_get_temp_dir(), 'resized_image_') . '.' . $extension;
+                // Create temporary file with JPG extension
+                $tempPath = tempnam(sys_get_temp_dir(), 'resized_image_') . '.jpg';
 
-                // Save based on original format
-                $success = false;
-                switch ($mimeType) {
-                    case 'image/jpeg':
-                    case 'image/jpg':
-                        $success = @imagejpeg($resizedImage, $tempPath, $quality);
-                        break;
-                    case 'image/png':
-                        // PNG compression level (0-9, where 9 is max compression)
-                        $pngQuality = 9 - (int)(($quality / 100) * 9);
-                        $success = @imagepng($resizedImage, $tempPath, $pngQuality);
-                        break;
-                }
+                // Force save as JPEG for optimal WhatsApp/Social media compatibility
+                $success = @imagejpeg($resizedImage, $tempPath, $quality);
 
                 imagedestroy($resizedImage);
 
@@ -152,13 +136,14 @@ trait ImageResizer
 
                 // If under target size, create new UploadedFile and return
                 if ($newSize <= $targetSizeKB * 1024) {
-                    $originalName = $uploadedFile->getClientOriginalName();
+                    // Force the extension to be .jpg
+                    $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME) . '.jpg';
 
                     // Create new UploadedFile instance
                     $resizedUploadedFile = new UploadedFile(
                         $tempPath,
                         $originalName,
-                        $mimeType,
+                        'image/jpeg',
                         null,
                         true // test mode to avoid file validation issues
                     );

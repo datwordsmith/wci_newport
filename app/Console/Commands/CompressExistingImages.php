@@ -52,9 +52,10 @@ class CompressExistingImages extends Command
             if ($disk->exists($event->poster)) {
                 $absolutePath = $disk->path($event->poster);
                 $size = filesize($absolutePath);
+                $mime = mime_content_type($absolutePath);
                 
-                if ($size > 300 * 1024) {
-                    $this->line("Compressing event poster: {$event->title} (" . round($size / 1024) . "KB)");
+                if ($size > 300 * 1024 || !in_array($mime, ['image/jpeg', 'image/jpg'])) {
+                    $this->line("Compressing event poster: {$event->title} (" . round($size / 1024) . "KB, {$mime})");
                     
                     $file = new UploadedFile(
                         $absolutePath,
@@ -95,9 +96,10 @@ class CompressExistingImages extends Command
             if ($disk->exists($item->image_path)) {
                 $absolutePath = $disk->path($item->image_path);
                 $size = filesize($absolutePath);
+                $mime = mime_content_type($absolutePath);
                 
-                if ($size > 300 * 1024) {
-                    $this->line("Compressing news image: {$item->title} (" . round($size / 1024) . "KB)");
+                if ($size > 300 * 1024 || !in_array($mime, ['image/jpeg', 'image/jpg'])) {
+                    $this->line("Compressing news image: {$item->title} (" . round($size / 1024) . "KB, {$mime})");
                     
                     $file = new UploadedFile(
                         $absolutePath,
