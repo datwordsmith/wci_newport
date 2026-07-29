@@ -50,6 +50,12 @@
                                 @endif
                             </div>
 
+                            @if($newsUpdate->image_path)
+                                <div class="mb-4">
+                                    <img src="{{ asset('storage/' . $newsUpdate->image_path) }}" class="img-fluid rounded shadow-sm w-100" alt="{{ $newsUpdate->title }}" style="max-height: 500px; object-fit: cover;">
+                                </div>
+                            @endif
+
                             @if($newsUpdate->excerpt)
                                 <p class="lead text-muted border-start border-3 ps-3 mb-4">{{ $newsUpdate->excerpt }}</p>
                             @endif

@@ -635,7 +635,7 @@
         <div class="nav-item">
           <a href="{{ route('admin.events') }}" class="nav-link {{ request()->routeIs('admin.events') ? 'active' : '' }}">
             <i class="fas fa-newspaper"></i>
-            <span>News & Events</span>
+            <span>Events</span>
           </a>
         </div>
         <div class="nav-item">

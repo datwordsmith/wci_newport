@@ -2,58 +2,9 @@
     @section('description', $description)
 
     @section('content')
-        <!-- Hero Section -->
-        <section class="giving-hero py-5">
-            <div class="container">
-                <div class="row justify-content-center text-center">
-                    <div class="col-md-8">
-                        <h1 class="serif-font mb-4">Ways to Give</h1>
-                        <p class="text-muted">Your giving supports the advancement of God's kingdom and the liberation of mankind through the preaching of the Word of Faith.</p>
-                    </div>
-
-                    <div class="col-12 mt-5">
-                        <div class="row g-3">
-                            <div class="col-md-3 col-sm-6">
-                                <div class="giving-type-card text-center">
-                                    <i class="fas fa-gift fa-2x text-primary-custom mb-3"></i>
-                                    <h6>Offerings</h6>
-                                    <p class="small text-muted">Freewill offerings to support the church</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="giving-type-card text-center">
-                                    <i class="fas fa-percentage fa-2x text-primary-custom mb-3"></i>
-                                    <h6>Tithes</h6>
-                                    <p class="small text-muted">"And all the tithe of the land... is the Lord's: it is holy unto the Lord." - Leviticus 27:30</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="giving-type-card text-center">
-                                    <i class="fas fa-bus fa-2x text-primary-custom mb-3"></i>
-                                    <h6>Transport Chariot</h6>
-                                    <p class="small text-muted">Support for church transportation needs</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="giving-type-card text-center">
-                                    <i class="fas fa-seedling fa-2x text-primary-custom mb-3"></i>
-                                    <h6>Kingdom Care Seed</h6>
-                                    <p class="small text-muted">Special seeds for ministry advancement</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Giving Methods Section -->
         <section class="values-section">
             <div class="container">
-                <div class="text-center mb-5">
-                    <h2 class="serif-font">Ways to Give</h2>
-                    <p class="lead">Multiple convenient options for your generous giving</p>
-                </div>
                 <div class="row g-2">
                     <!-- Cash Offering -->
                     <div class="col-md-3 col-12">
@@ -159,21 +110,58 @@
                   </div>
                 </section>
 
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="row g-3">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="giving-type-card text-center">
+                                    <i class="fas fa-gift fa-2x text-primary-custom mb-3"></i>
+                                    <h6>Offerings</h6>
+                                    <p class="small text-muted">Freewill offerings to support the church</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="giving-type-card text-center">
+                                    <i class="fas fa-percentage fa-2x text-primary-custom mb-3"></i>
+                                    <h6>Tithes</h6>
+                                    <p class="small text-muted">"And all the tithe of the land... is the Lord's: it is holy unto the Lord." - Leviticus 27:30</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="giving-type-card text-center">
+                                    <i class="fas fa-bus fa-2x text-primary-custom mb-3"></i>
+                                    <h6>Transport Chariot</h6>
+                                    <p class="small text-muted">Support for church transportation needs</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="giving-type-card text-center">
+                                    <i class="fas fa-seedling fa-2x text-primary-custom mb-3"></i>
+                                    <h6>Kingdom Care Seed</h6>
+                                    <p class="small text-muted">Special seeds for ministry advancement</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @push('scripts')
                 <script>
-                function copyToClipboard(text, button) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        const originalText = button.innerHTML;
-                        button.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                        setTimeout(() => {
-                            button.innerHTML = originalText;
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Failed to copy:', err);
-                    });
-                }
+                    function copyToClipboard(text, button) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            const originalText = button.innerHTML;
+                            button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            setTimeout(() => {
+                                button.innerHTML = originalText;
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy:', err);
+                        });
+                    }
                 </script>
-                @endpush                <!-- Scripture Section -->
+                @endpush                 
+                
+                <!-- Scripture Section -->
                 <div class="row mt-5">
                     <div class="col-12">
                         <div class="scripture-card text-center">

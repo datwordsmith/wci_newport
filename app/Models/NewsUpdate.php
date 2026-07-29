@@ -20,6 +20,7 @@ class NewsUpdate extends Model
         'status',
         'is_featured',
         'published_at',
+        'image_path',
         'attachment_path',
         'attachment_original_name',
         'created_by',

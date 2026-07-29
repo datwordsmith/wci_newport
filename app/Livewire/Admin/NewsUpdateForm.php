@@ -32,6 +32,9 @@ class NewsUpdateForm extends Component
     public ?string $current_attachment_path = null;
     public ?string $current_attachment_original_name = null;
 
+    public $image;
+    public ?string $current_image_path = null;
+
     #[Title('News & Updates')]
     public function mount(?int $newsId = null): void
     {
@@ -52,6 +55,7 @@ class NewsUpdateForm extends Component
                 : '';
             $this->current_attachment_path = $news->attachment_path;
             $this->current_attachment_original_name = $news->attachment_original_name;
+            $this->current_image_path = $news->image_path;
         }
     }
 
@@ -67,6 +71,7 @@ class NewsUpdateForm extends Component
             'is_featured' => 'boolean',
             'published_at' => 'nullable|date',
             'attachment'  => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
+            'image'       => 'nullable|image|max:5120',
         ];
     }
 
@@ -75,6 +80,8 @@ class NewsUpdateForm extends Component
         'body.required'     => 'Please provide the content.',
         'attachment.mimes'  => 'Attachment must be a PDF, Word document, or image (JPG/PNG).',
         'attachment.max'    => 'Attachment size must not exceed 5MB.',
+        'image.image'       => 'The feature image must be a valid image file.',
+        'image.max'         => 'The feature image size must not exceed 5MB.',
     ];
 
     public function save(): void
@@ -96,6 +103,15 @@ class NewsUpdateForm extends Component
             $attachmentOriginalName = $this->attachment->getClientOriginalName();
         }
 
+        $imagePath = $this->current_image_path;
+
+        if ($this->image) {
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $this->image->store('news-images', 'public');
+        }
+
         $excerpt = $this->excerpt ?: Str::limit(strip_tags($this->body), 180);
 
         if ($this->editMode && $this->newsId) {
@@ -108,6 +124,7 @@ class NewsUpdateForm extends Component
             $news->status                   = $this->status;
             $news->is_featured              = $this->is_featured;
             $news->published_at             = $publishedAt;
+            $news->image_path               = $imagePath;
             $news->attachment_path          = $attachmentPath;
             $news->attachment_original_name = $attachmentOriginalName;
             $news->save();
@@ -123,6 +140,7 @@ class NewsUpdateForm extends Component
                 'status'                   => $this->status,
                 'is_featured'              => $this->is_featured,
                 'published_at'             => $publishedAt,
+                'image_path'               => $imagePath,
                 'attachment_path'          => $attachmentPath,
                 'attachment_original_name' => $attachmentOriginalName,
                 'created_by'               => auth()->user()->email ?? 'Unknown',

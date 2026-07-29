@@ -146,6 +146,37 @@
                     </div>
                 </div>
 
+                <!-- Feature Image -->
+                <div class="card mb-4">
+                    <div class="card-header fw-semibold">
+                        <i class="fas fa-image me-2"></i>Feature Image
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Upload Image</label>
+                            <input type="file"
+                                   class="form-control @error('image') is-invalid @enderror"
+                                   wire:model="image"
+                                   accept="image/*">
+                            <div class="form-text">JPG, PNG, or GIF — max 5MB.</div>
+                            @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                            @if($image)
+                                <div class="mt-3">
+                                    <p class="small text-muted mb-1"><i class="fas fa-check-circle text-success me-1"></i>New Image Preview:</p>
+                                    <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail" alt="Preview" style="max-height: 150px;">
+                                </div>
+                            @elseif($current_image_path)
+                                <div class="mt-3 p-2 bg-light rounded small">
+                                    <p class="small text-muted mb-1"><i class="fas fa-image me-1"></i>Current Image:</p>
+                                    <img src="{{ asset('storage/' . $current_image_path) }}" class="img-thumbnail mb-2" alt="Current Image" style="max-height: 150px;">
+                                    <div class="text-muted mt-1">Upload a new image above to replace it.</div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Attachment -->
                 <div class="card">
                     <div class="card-header fw-semibold">
