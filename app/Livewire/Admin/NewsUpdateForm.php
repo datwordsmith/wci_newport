@@ -159,6 +159,25 @@ class NewsUpdateForm extends Component
         $this->redirect(route('admin.news_updates'), navigate: true);
     }
 
+    public function removeImage(): void
+    {
+        if ($this->current_image_path) {
+            if (Storage::disk('public')->exists($this->current_image_path)) {
+                Storage::disk('public')->delete($this->current_image_path);
+            }
+
+            if ($this->editMode && $this->newsId) {
+                $news = NewsUpdate::findOrFail($this->newsId);
+                $news->image_path = null;
+                $news->save();
+            }
+
+            $this->current_image_path = null;
+        }
+
+        $this->image = null;
+    }
+
     public function render()
     {
         return view('livewire.admin.news-update-form');

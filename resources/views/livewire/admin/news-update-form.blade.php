@@ -68,9 +68,11 @@
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Content <span class="text-danger">*</span></label>
                                 <input type="hidden" wire:model.defer="body" id="bodyInput">
-                                <div id="quillEditor"
-                                     style="min-height: 300px; background:#fff;"
-                                     class="@error('body') border border-danger rounded @enderror">
+                                <div wire:ignore>
+                                    <div id="quillEditor"
+                                         style="min-height: 300px; background:#fff;"
+                                         class="@error('body') border border-danger rounded @enderror">
+                                    </div>
                                 </div>
                                 @error('body')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
@@ -164,14 +166,20 @@
                             @if($image)
                                 <div class="mt-3">
                                     <p class="small text-muted mb-1"><i class="fas fa-check-circle text-success me-1"></i>New Image Preview:</p>
-                                    <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail" alt="Preview" style="max-height: 150px;">
+                                    <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail d-block mb-2" alt="Preview" style="max-height: 150px;">
                                 </div>
                             @elseif($current_image_path)
                                 <div class="mt-3 p-2 bg-light rounded small">
                                     <p class="small text-muted mb-1"><i class="fas fa-image me-1"></i>Current Image:</p>
-                                    <img src="{{ asset('storage/' . $current_image_path) }}" class="img-thumbnail mb-2" alt="Current Image" style="max-height: 150px;">
+                                    <img src="{{ asset('storage/' . $current_image_path) }}" class="img-thumbnail d-block mb-2" alt="Current Image" style="max-height: 150px;">
                                     <div class="text-muted mt-1">Upload a new image above to replace it.</div>
                                 </div>
+                            @endif
+
+                            @if($image || $current_image_path)
+                                <button type="button" class="btn btn-sm btn-outline-danger mt-2" wire:click="removeImage">
+                                    <i class="fas fa-trash me-1"></i>Remove Image
+                                </button>
                             @endif
                         </div>
                     </div>
@@ -220,7 +228,13 @@
 
 @push('scripts')
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-tooltip {
+        z-index: 1060 !important; /* Higher than sidebar's 1050 */
+    }
+</style>
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 <script>
     (function () {
         let quill = null;
@@ -234,14 +248,16 @@
                 theme: 'snow',
                 placeholder: 'Write the full content of this news item or announcement...',
                 modules: {
+                    imageResize: {
+                        displaySize: true
+                    },
                     toolbar: [
                         [{ header: [1, 2, 3, false] }],
                         ['bold', 'italic', 'underline', 'strike'],
                         [{ list: 'ordered' }, { list: 'bullet' }],
                         [{ indent: '-1' }, { indent: '+1' }],
                         [{ align: [] }],
-                        ['blockquote'],
-                        ['link'],
+                        ['blockquote', 'link', 'image'],
                         ['clean']
                     ]
                 }
