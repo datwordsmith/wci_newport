@@ -9,12 +9,14 @@ use Livewire\Attributes\Layout;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\SundayService as SundayServiceModel;
+use App\Livewire\Admin\Traits\ImageResizer;
 
 #[Layout('layouts.admin')]
 class SundayService extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use ImageResizer;
 
     // Ensure Livewire uses Bootstrap pagination templates (not Tailwind SVGs)
     public string $paginationTheme = 'bootstrap';
@@ -69,179 +71,7 @@ class SundayService extends Component
     /**
      * Resize image if it's larger than 2MB while maintaining quality
      */
-    private function resizeImageIfNeeded($uploadedFile)
-    {
-        // Check if GD extension is available
-        if (!extension_loaded('gd')) {
-            \Log::warning('GD extension not available for image resizing');
-            return $uploadedFile;
-        }
-
-        // If file is already under 2MB, return as is
-        if ($uploadedFile->getSize() <= 2048 * 1024) { // 2MB in bytes
-            return $uploadedFile;
-        }
-
-        try {
-            $originalPath = $uploadedFile->getPathname();
-
-            // Check if file exists and is readable
-            if (!file_exists($originalPath) || !is_readable($originalPath)) {
-                \Log::warning('Image file not readable: ' . $originalPath);
-                return $uploadedFile;
-            }
-
-            $imageInfo = getimagesize($originalPath);
-
-            if (!$imageInfo) {
-                \Log::warning('Invalid image file: ' . $originalPath);
-                return $uploadedFile; // Not a valid image, let validation handle it
-            }
-
-            $width = $imageInfo[0];
-            $height = $imageInfo[1];
-            $mimeType = $imageInfo['mime'];
-
-            // Check memory limit before processing large images
-            $memoryLimit = ini_get('memory_limit');
-            $requiredMemory = ($width * $height * 4); // Rough estimate
-            if ($memoryLimit !== '-1' && $requiredMemory > (int)$memoryLimit * 1024 * 1024 * 0.5) {
-                \Log::warning('Image too large for available memory: ' . $width . 'x' . $height);
-                return $uploadedFile;
-            }
-
-            // Create image resource based on type
-            $sourceImage = null;
-            switch ($mimeType) {
-                case 'image/jpeg':
-                    $sourceImage = @imagecreatefromjpeg($originalPath);
-                    break;
-                case 'image/png':
-                    $sourceImage = @imagecreatefrompng($originalPath);
-                    break;
-                case 'image/jpg':
-                    $sourceImage = @imagecreatefromjpeg($originalPath);
-                    break;
-                default:
-                    \Log::warning('Unsupported image format: ' . $mimeType);
-                    return $uploadedFile; // Unsupported format
-            }
-
-            if (!$sourceImage) {
-                \Log::warning('Failed to create image resource from: ' . $originalPath);
-                return $uploadedFile;
-            }
-
-            // Calculate new dimensions (reduce by 20% each time until under 2MB or max 3 iterations)
-            $maxIterations = 3;
-            $iteration = 0;
-            $quality = 85; // Start with high quality
-
-            do {
-                $iteration++;
-                $scaleFactor = 1 - ($iteration * 0.2); // Reduce by 20% each iteration
-                $newWidth = (int)($width * $scaleFactor);
-                $newHeight = (int)($height * $scaleFactor);
-
-                // Ensure minimum dimensions
-                if ($newWidth < 300 || $newHeight < 300) {
-                    $newWidth = max(300, $newWidth);
-                    $newHeight = max(300, $newHeight);
-                }
-
-                // Create new image
-                $resizedImage = @imagecreatetruecolor($newWidth, $newHeight);
-                if (!$resizedImage) {
-                    \Log::warning('Failed to create resized image canvas');
-                    break;
-                }
-
-                // Preserve transparency for PNG
-                if ($mimeType === 'image/png') {
-                    imagealphablending($resizedImage, false);
-                    imagesavealpha($resizedImage, true);
-                    $transparent = imagecolorallocatealpha($resizedImage, 255, 255, 255, 127);
-                    imagefill($resizedImage, 0, 0, $transparent);
-                }
-
-                // Resize the image
-                $resizeResult = @imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                if (!$resizeResult) {
-                    \Log::warning('Failed to resize image');
-                    imagedestroy($resizedImage);
-                    break;
-                }
-
-                // Create temporary file with proper extension
-                $extension = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_EXTENSION);
-                $tempPath = tempnam(sys_get_temp_dir(), 'resized_poster_') . '.' . $extension;
-
-                // Save based on original format
-                $success = false;
-                switch ($mimeType) {
-                    case 'image/jpeg':
-                    case 'image/jpg':
-                        $success = @imagejpeg($resizedImage, $tempPath, $quality);
-                        break;
-                    case 'image/png':
-                        // PNG compression level (0-9, where 9 is max compression)
-                        $pngQuality = 9 - (int)(($quality / 100) * 9);
-                        $success = @imagepng($resizedImage, $tempPath, $pngQuality);
-                        break;
-                }
-
-                imagedestroy($resizedImage);
-
-                if (!$success || !file_exists($tempPath)) {
-                    \Log::warning('Failed to save resized image to: ' . $tempPath);
-                    if (file_exists($tempPath)) {
-                        @unlink($tempPath);
-                    }
-                    break;
-                }
-
-                $newSize = filesize($tempPath);
-
-                // If under 2MB, create new UploadedFile and return
-                if ($newSize <= 2048 * 1024) {
-                    $originalName = $uploadedFile->getClientOriginalName();
-
-                    // Create new UploadedFile instance
-                    $resizedUploadedFile = new \Illuminate\Http\UploadedFile(
-                        $tempPath,
-                        $originalName,
-                        $mimeType,
-                        null,
-                        true // test mode to avoid file validation issues
-                    );
-
-                    imagedestroy($sourceImage);
-                    return $resizedUploadedFile;
-                }
-
-                // Clean up temp file for next iteration
-                if (file_exists($tempPath)) {
-                    @unlink($tempPath);
-                }
-
-                // Reduce quality for next iteration
-                $quality = max(60, $quality - 10);
-
-            } while ($iteration < $maxIterations);
-
-            imagedestroy($sourceImage);
-
-        } catch (\Exception $e) {
-            // If resizing fails, return original file
-            \Log::error('Image resize failed: ' . $e->getMessage(), [
-                'file' => $uploadedFile->getClientOriginalName(),
-                'size' => $uploadedFile->getSize(),
-                'trace' => $e->getTraceAsString()
-            ]);
-        }
-
-        return $uploadedFile; // Return original if resizing failed
-    }
+    // resizeImageIfNeeded method removed as it is now provided by the ImageResizer trait
 
     public function create()
     {

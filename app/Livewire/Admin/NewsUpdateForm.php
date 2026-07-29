@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use App\Models\NewsUpdate;
+use App\Livewire\Admin\Traits\ImageResizer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
 class NewsUpdateForm extends Component
 {
     use WithFileUploads;
+    use ImageResizer;
 
     public ?int $newsId = null;
     public bool $editMode = false;
@@ -109,7 +111,8 @@ class NewsUpdateForm extends Component
             if ($imagePath && Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
             }
-            $imagePath = $this->image->store('news-images', 'public');
+            $processedImage = $this->resizeImageIfNeeded($this->image, 300);
+            $imagePath = $processedImage->store('news-images', 'public');
         }
 
         $excerpt = $this->excerpt ?: Str::limit(strip_tags($this->body), 180);

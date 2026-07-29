@@ -10,12 +10,14 @@ use Livewire\Attributes\Layout;
 use App\Models\Event as EventModel;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Livewire\Admin\Traits\ImageResizer;
 
 #[Layout('layouts.admin')]
 class Event extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use ImageResizer;
 
     #[Title('Events')]
 
@@ -192,7 +194,8 @@ class Event extends Component
             // Handle file upload
             $posterPath = null;
             if ($this->poster) {
-                $posterPath = $this->poster->store('posters', 'public');
+                $processedPoster = $this->resizeImageIfNeeded($this->poster, 300);
+                $posterPath = $processedPoster->store('posters', 'public');
             }
 
             // Shorten URL if provided
@@ -238,13 +241,11 @@ class Event extends Component
         $posterPath = $event->poster; // Keep existing poster by default
 
         if ($this->poster) {
-            // Delete old poster if it exists
-            if ($event->poster && Storage::disk('public')->exists($event->poster)) {
-                Storage::disk('public')->delete($event->poster);
+            if ($this->current_poster && Storage::disk('public')->exists($this->current_poster)) {
+                Storage::disk('public')->delete($this->current_poster);
             }
-
-            // Upload new poster
-            $posterPath = $this->poster->store('posters', 'public');
+            $processedPoster = $this->resizeImageIfNeeded($this->poster, 300);
+            $posterPath = $processedPoster->store('posters', 'public');
         }
 
         // Shorten URL if it has changed
