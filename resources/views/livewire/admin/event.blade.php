@@ -162,7 +162,7 @@
                     </div>
 
                     @if($event->description)
-                    <p class="card-text text-muted small mb-2">{{ Str::limit($event->description, 100) }}</p>
+                    <p class="card-text text-muted small mb-2">{!! Str::limit(strip_tags($event->description), 100) !!}</p>
                     @endif
 
                     <div class="d-flex justify-content-between align-items-center mb-2">

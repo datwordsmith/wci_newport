@@ -96,7 +96,7 @@
                                 <h5 class="serif-font mb-3">About This Event</h5>
                                 <div class="lh-lg">
                                     @if($event->description)
-                                        {{ $event->description }}
+                                        {!! $event->description !!}
                                     @else
                                         <p class="text-muted">No description available.</p>
                                     @endif

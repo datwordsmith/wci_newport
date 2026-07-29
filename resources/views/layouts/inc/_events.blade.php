@@ -69,7 +69,7 @@
                             <h5 class="card-title serif-font mb-3">{{ $event->title }}</h5>
 
                             @if($event->description)
-                                <p class="card-text text-muted mb-3">{{ Str::limit($event->description, 120) }}</p>
+                                <p class="card-text text-muted mb-3">{!! Str::limit(strip_tags($event->description), 120) !!}</p>
                             @else
                                 <p class="card-text text-muted mb-3">No description available for this event.</p>
                             @endif
