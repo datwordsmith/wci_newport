@@ -255,9 +255,37 @@
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea wire:model="description" class="form-control @error('description') is-invalid @enderror"
-                                      id="description" rows="3" placeholder="Enter event description (optional)"></textarea>
-                            @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            <div wire:ignore
+                                 x-data="{
+                                     initQuill() {
+                                         if (typeof Quill === 'undefined') {
+                                             setTimeout(() => this.initQuill(), 100);
+                                             return;
+                                         }
+                                         let quill = new Quill($refs.quillEditor, {
+                                             theme: 'snow',
+                                             placeholder: 'Enter event description...',
+                                             modules: {
+                                                 imageResize: { displaySize: true },
+                                                 toolbar: [
+                                                     [{ header: [1, 2, 3, false] }],
+                                                     ['bold', 'italic', 'underline', 'strike'],
+                                                     [{ list: 'ordered' }, { list: 'bullet' }],
+                                                     ['link', 'image'],
+                                                     ['clean']
+                                                 ]
+                                             }
+                                         });
+                                         quill.root.innerHTML = $wire.description || '';
+                                         quill.on('text-change', () => {
+                                             $wire.description = quill.root.innerHTML === '<p><br></p>' ? '' : quill.root.innerHTML;
+                                         });
+                                     }
+                                 }"
+                                 x-init="initQuill()">
+                                <div x-ref="quillEditor" class="@error('description') border border-danger rounded @enderror" style="min-height: 150px; background:#fff;"></div>
+                            </div>
+                            @error('description') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
@@ -448,6 +476,15 @@
     @endif
 </div>
 
+@push('scripts')
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-tooltip {
+        z-index: 1080 !important; /* Higher than modal 1070 */
+    }
+</style>
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Function to update end date minimum
@@ -488,3 +525,4 @@ document.addEventListener('DOMContentLoaded', function() {
     updateEndDateMin();
 });
 </script>
+@endpush
