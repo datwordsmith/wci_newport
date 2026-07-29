@@ -33,6 +33,9 @@
                     @foreach($items as $item)
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 shadow-sm">
+                                @if($item->image_path)
+                                    <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top" alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                                @endif
                                 <div class="card-body d-flex flex-column">
                                     @if($item->source)
                                         <div class="mb-2">
