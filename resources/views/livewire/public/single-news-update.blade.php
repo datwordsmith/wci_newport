@@ -1,9 +1,12 @@
 <div>
+    @section('title', $newsUpdate->title . ' - Winners Chapel International Newport')
     @section('description', \Illuminate\Support\Str::limit(strip_tags($newsUpdate->excerpt ?: $newsUpdate->body), 160))
 
+    @if($newsUpdate->image_path)
+        @section('og_image', asset('storage/' . $newsUpdate->image_path))
+    @endif
+
     @push('meta')
-        <meta property="og:title" content="{{ $newsUpdate->title }}" />
-        <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($newsUpdate->excerpt ?: $newsUpdate->body), 160) }}" />
         <meta property="og:type" content="article" />
         <meta property="og:url" content="{{ route('news_update.show', $newsUpdate->slug) }}" />
     @endpush

@@ -3,26 +3,14 @@
 @endpush
 
 @section('title', $event->title . ' - Winners Chapel International Newport')
+@section('description', strip_tags(Str::limit($event->description, 200)))
+@if($event->poster)
+    @section('og_image', asset('storage/' . $event->poster))
+@endif
 
 @push('meta')
-    <meta property="og:title" content="{{ $event->title }}" />
-    <meta property="og:description" content="{{ strip_tags(Str::limit($event->description, 200)) }}" />
-    @if($event->poster)
-    <meta property="og:image" content="{{ asset(Storage::url($event->poster)) }}" />
-    @else
-    <meta property="og:image" content="{{ asset('assets/images/lfww_logo.png') }}" />
-    @endif
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{ route('event.show', ['id' => $event->id, 'slug' => $event->slug]) }}" />
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $event->title }}">
-    <meta name="twitter:description" content="{{ strip_tags(Str::limit($event->description, 200)) }}">
-    @if($event->poster)
-    <meta name="twitter:image" content="{{ asset(Storage::url($event->poster)) }}">
-    @else
-    <meta name="twitter:image" content="{{ asset('assets/images/lfww_logo.png') }}">
-    @endif
 @endpush
 
 <div>
