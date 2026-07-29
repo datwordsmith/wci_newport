@@ -4,6 +4,7 @@
 <meta property="og:title" content="{{ $title ?? config('app.name', 'WCI Newport') }}">
 <meta property="og:description" content="{{ $description ?? 'Winners Chapel International Newport - Liberating the World through the Preaching of the Word of Faith' }}">
 <meta property="og:image" content="{{ $og_image ?? asset('assets/images/lfww_logo.png') }}">
+<meta property="og:image:secure_url" content="{{ str_replace('http://', 'https://', $og_image ?? asset('assets/images/lfww_logo.png')) }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">

@@ -65,6 +65,11 @@ trait ImageResizer
                 case 'image/png':
                     $sourceImage = @imagecreatefrompng($originalPath);
                     break;
+                case 'image/webp':
+                    $sourceImage = @imagecreatefromwebp($originalPath);
+                    // Force conversion to JPEG for maximum social media compatibility (like WhatsApp)
+                    $mimeType = 'image/jpeg';
+                    break;
                 default:
                     Log::warning('Unsupported image format for resizing: ' . $mimeType);
                     return $uploadedFile; // Unsupported format
