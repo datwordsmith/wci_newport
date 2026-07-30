@@ -34,7 +34,7 @@ class Testimony extends Component
         if ($this->testimony->approvedImages->isNotEmpty()) {
             $ogImage = asset('storage/' . $this->testimony->approvedImages->first()->image_path);
         } else {
-            $ogImage = asset('assets/images/og-testimony.jpg');
+            $ogImage = asset('assets/images/og-testimony.jpg') . '?v=' . filemtime(public_path('assets/images/og-testimony.jpg'));
         }
 
         return view('livewire.public.testimony', [

@@ -212,7 +212,7 @@ class Testimonies extends Component
             'testimonies' => $testimonies,
         ])->layoutData([
             'description' => $this->description,
-            'og_image' => asset('assets/images/og-testimony.jpg')
+            'og_image' => asset('assets/images/og-testimony.jpg') . '?v=' . filemtime(public_path('assets/images/og-testimony.jpg'))
         ]);
     }
 }

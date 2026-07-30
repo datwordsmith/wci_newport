@@ -17,7 +17,7 @@ class Giving extends Component
     {
         return view('livewire.public.giving')->layoutData([
             'description' => $this->description,
-            'og_image' => asset('assets/images/og-giving.jpg')
+            'og_image' => asset('assets/images/og-giving.jpg') . '?v=' . filemtime(public_path('assets/images/og-giving.jpg'))
         ]);
     }
 }
