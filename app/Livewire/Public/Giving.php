@@ -15,6 +15,9 @@ class Giving extends Component
 
     public function render()
     {
-        return view('livewire.public.giving')->layoutData(['description' => $this->description]);
+        return view('livewire.public.giving')->layoutData([
+            'description' => $this->description,
+            'og_image' => asset('assets/images/og-giving.jpg')
+        ]);
     }
 }

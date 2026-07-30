@@ -13,8 +13,8 @@ class Testimony extends Component
     public $testimonyId;
     public $testimony;
 
-    #[Title('Testimonies')]
-    public $description = "Discover the powerful testimonies of our members and how God is working in their lives";
+    #[Title('Testimony')]
+    public $description = "Share and discover the powerful testimonies of our members and how God is working in their lives";
 
     public function mount($id)
     {
@@ -30,8 +30,18 @@ class Testimony extends Component
 
     public function render()
     {
+        $ogImage = null;
+        if ($this->testimony->approvedImages->isNotEmpty()) {
+            $ogImage = asset('storage/' . $this->testimony->approvedImages->first()->image_path);
+        } else {
+            $ogImage = asset('assets/images/og-testimony.jpg');
+        }
+
         return view('livewire.public.testimony', [
             'testimony' => $this->testimony
-        ])->layoutData(['description' => $this->description]);
+        ])->layoutData([
+            'description' => $this->description,
+            'og_image' => $ogImage
+        ]);
     }
 }

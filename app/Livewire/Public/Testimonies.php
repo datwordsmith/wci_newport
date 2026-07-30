@@ -16,7 +16,7 @@ class Testimonies extends Component
     protected $paginationTheme = 'bootstrap';
 
     #[Title('Testimonies')]
-    public $description = "Discover the powerful testimonies of our members and how God is working in their lives";
+    public $description = "Share and discover the powerful testimonies of our members and how God is working in their lives";
 
     // Public filters/search
     public $resultFilter = 'all';
@@ -210,6 +210,9 @@ class Testimonies extends Component
 
         return view('livewire.public.testimonies', [
             'testimonies' => $testimonies,
-        ])->layoutData(['description' => $this->description]);
+        ])->layoutData([
+            'description' => $this->description,
+            'og_image' => asset('assets/images/og-testimony.jpg')
+        ]);
     }
 }
