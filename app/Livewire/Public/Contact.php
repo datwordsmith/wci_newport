@@ -123,6 +123,6 @@ class Contact extends Component
 
     public function render()
     {
-        return view('livewire.public.contact');
+        return view('livewire.public.contact')->layoutData(['description' => $this->description]);
     }
 }

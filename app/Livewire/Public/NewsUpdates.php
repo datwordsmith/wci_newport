@@ -33,6 +33,6 @@ class NewsUpdates extends Component
             ->orderByDesc('published_at')
             ->paginate(9);
 
-        return view('livewire.public.news-updates', compact('items'));
+        return view('livewire.public.news-updates', compact('items'))->layoutData(['description' => $this->description]);
     }
 }

@@ -73,6 +73,6 @@ class Events extends Component
 
         return view('livewire.public.events', [
             'upcomingEvents' => $paginator,
-        ]);
+        ])->layoutData(['description' => $this->description]);
     }
 }

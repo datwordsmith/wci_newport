@@ -15,6 +15,6 @@ class Csr extends Component
 
     public function render()
     {
-        return view('livewire.public.csr');
+        return view('livewire.public.csr')->layoutData(['description' => $this->description]);
     }
 }

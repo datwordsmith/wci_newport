@@ -210,6 +210,6 @@ class Testimonies extends Component
 
         return view('livewire.public.testimonies', [
             'testimonies' => $testimonies,
-        ]);
+        ])->layoutData(['description' => $this->description]);
     }
 }

@@ -75,6 +75,6 @@ class Index extends Component
             'nextSundayService' => $this->nextSundayService,
             'upcomingEvents' => $this->upcomingEvents,
             'latestNews' => $this->latestNews,
-        ]);
+        ])->layoutData(['description' => $this->description]);
     }
 }

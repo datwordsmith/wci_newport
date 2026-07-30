@@ -15,6 +15,6 @@ class About extends Component
 
     public function render()
     {
-        return view('livewire.public.about');
+        return view('livewire.public.about')->layoutData(['description' => $this->description]);
     }
 }

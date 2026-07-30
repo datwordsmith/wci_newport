@@ -233,6 +233,6 @@ class CreateTestimony extends Component
 
     public function render()
     {
-        return view('livewire.public.create-testimony');
+        return view('livewire.public.create-testimony')->layoutData(['description' => $this->description]);
     }
 }

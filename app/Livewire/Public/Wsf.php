@@ -63,6 +63,6 @@ class Wsf extends Component
 
         return view('livewire.public.wsf', [
             'wsfs' => $wsfs
-        ]);
+        ])->layoutData(['description' => $this->description]);
     }
 }

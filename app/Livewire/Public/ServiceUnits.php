@@ -15,6 +15,6 @@ class ServiceUnits extends Component
     public function render()
     {
         return view('livewire.public.service-units')
-            ->layout('layouts.main');
+            ->layout('layouts.main')->layoutData(['description' => $this->description]);
     }
 }
