@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,6 +25,7 @@
 
     </style>
 </head>
+
 <body>
     <!-- Top Navigation -->
     @include('layouts.inc._topnav')
@@ -40,32 +42,32 @@
         <div class="container">
             <div class="row align-items-center">
                 @hasSection('hero-service-info')
-                    <!-- Two-column layout when service exists -->
-                    <div class="col-md-8">
-                        <div class="hero-content animate-fade-in">
-                            <!-- Show upcoming service info -->
-                            @yield('hero-service-info')
+                <!-- Two-column layout when service exists -->
+                <div class="col-md-8">
+                    <div class="hero-content animate-fade-in">
+                        <!-- Show upcoming service info -->
+                        @yield('hero-service-info')
 
-                            <div class="mt-4">
-                                <!-- Show dynamic service button -->
-                                @yield('hero-service-button')
-                            </div>
+                        <div class="mt-4">
+                            <!-- Show dynamic service button -->
+                            @yield('hero-service-button')
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="hero-poster text-center">
-                            @yield('hero-service-poster')
-                        </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="hero-poster text-center">
+                        @yield('hero-service-poster')
                     </div>
+                </div>
                 @else
-                    <!-- Single column layout when no service -->
-                    <div class="col-md-8">
-                        <div class="hero-content animate-fade-in">
-                            <!-- Show default church info when no upcoming service -->
-                            <h3 class="serif-font">Winners Chapel International<br>Newport</h3>
-                            <p>Liberating the World through the Preaching of the Word of Faith</p>
-                        </div>
+                <!-- Single column layout when no service -->
+                <div class="col-md-8">
+                    <div class="hero-content animate-fade-in">
+                        <!-- Show default church info when no upcoming service -->
+                        <h3 class="serif-font">Winners Chapel International<br>Newport</h3>
+                        <p>Liberating the World through the Preaching of the Word of Faith</p>
                     </div>
+                </div>
                 @endif
                 <div class="mt-2">
                     <!-- Default button when no service info -->
@@ -83,20 +85,24 @@
     <section id="about" class="about-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 mb-4 mb-md-0">
+                <div class="col-md-4 mb-4 mb-md-0">
                     <div class="about-image">
-                        <img src="{{ asset('assets/images/pastor_craig_01.jpg') }}" alt="Pastor Craig Oluwatosin" class="img-fluid rounded shadow" />
+                        <img src="{{ asset('assets/images/Pastor_James_Jatta_2.png') }}" alt="Pastor James Jatta" class="img-fluid rounded shadow" />
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <p class="">You are welcome to Winners Chapel International, Newport, a home of signs and wonders where God stops the tears of men and women; where God confers breakthroughs in all areas and God decorates destiny here. Our turnaround God has been at work in this commission for over decades, surprising every member of this church with unimaginable testimonies as they believe. If you will endeavour to abide in this church and commit to following every instruction that you receive here, the Lord God will bless you openly as he did to Obed-Edom.</p>
+                <div class="col-md-8">
+                    <p class="">Welcome to Winners Chapel International, Newport, a home of signs, wonders, and divine encounters where destinies are transformed by the power of God's Word.</p>
 
-                    <p>Since God is not a respecter of persons, expect the turnaround God to visit you also in this church as you fellowship with us. I want to welcome you today to this home of signs and wonders.</p>
+                    <p>We are delighted that God has led you to fellowship with us. At Winners Chapel International, Newport, we are committed to raising champions through the teaching of the Word of Faith, and the manifestation of God's presence. This is a place where lives are changed, prayers are answered, and testimonies abound. The God of this Commission is still performing mighty acts today. Regardless of your background, circumstances, or challenges, we believe that as you engage wholeheartedly in worship, prayer, and obedience to God's instructions, you will experience His goodness, favour, and supernatural breakthroughs in every area of your life.</p>
 
-                    <p>And may today's encounter usher you into the realms of ear-tingling testimonies that you have always longed for, in the name of Jesus Christ. Amen.</p>
+                    <p>As a church family, we are passionate about helping people discover their God-given purpose, grow spiritually, and walk in victory. Whether you are visiting for the first time or looking for a church to call home, we warmly welcome you and invite you to become part of this vibrant and loving community of believers.</p>
+
+                    <p>I encourage you to come with great expectations, for our God is faithful to fulfil His promises. We are confident that your encounter with God here will result in undeniable testimonies and lasting transformation.</p>
+
+                    <p>May the Lord bless you, strengthen you, and establish you in His perfect plan for your life. We look forward to worshipping with you.</p>
 
                     <div class="mt-3">
-                        <h5 class="serif-font mb-1">Pastor Craig Oluwatosin</h5>
+                        <h5 class="serif-font mb-1">Pastor James Jatta</h5>
                         <p class="text-muted mb-0 text-primary-custom">(Resident Pastor)</p>
                     </div>
                 </div>
@@ -195,38 +201,39 @@
 
     <section class="get-in-touch">
         <div class="container">
-                <div class="text-center my-5">
-                    <h2 class="serif-font">Get In Touch</h2>
-                    <p class="lead">We'd love to hear from you and welcome you to church</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="contact-card text-center">
-                            <div class="contact-icon mx-auto">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <p>Winners Chapel Int'l<br>Church Rd, Newport<br>NP19 7EJ</p>
+            <div class="text-center my-5">
+                <h2 class="serif-font">Get In Touch</h2>
+                <p class="lead">We'd love to hear from you and welcome you to church</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="contact-card text-center">
+                        <div class="contact-icon mx-auto">
+                            <i class="fas fa-map-marker-alt"></i>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="contact-card text-center">
-                            <div class="contact-icon mx-auto">
-                                <i class="fas fa-address-card"></i>
-                            </div>
-                            <p><i class="fas fa-phone me-2"></i>07901 024213<br>
-                            <i class="fas fa-envelope me-2"></i>newport@winners-chapel.org.uk</p>
-                        </div>
+                        <p>Winners Chapel Int'l<br>Church Rd, Newport<br>NP19 7EJ</p>
                     </div>
                 </div>
-                <div class="row mt-5">
-                    <div class="col-lg-12 text-center">
-                        <div class="social-links mb-3">
-                            <a href="https://www.facebook.com/61553737660932" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                            <a href="https://x.com/wcinewport" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.instagram.com/wcinewport/" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                <div class="col-md-6">
+                    <div class="contact-card text-center">
+                        <div class="contact-icon mx-auto">
+                            <i class="fas fa-address-card"></i>
                         </div>
+                        <p><i class="fas fa-phone me-2"></i>07901 024213<br>
+                            <i class="fas fa-envelope me-2"></i>newport@winners-chapel.org.uk
+                        </p>
                     </div>
                 </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-lg-12 text-center">
+                    <div class="social-links mb-3">
+                        <a href="https://www.facebook.com/61553737660932" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/wcinewport" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/wcinewport/" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -240,53 +247,63 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Hide hero loader when background image is ready (with minimum visible time)
-            (function(){
-                function parseBgUrl(el){
-                    const bg = getComputedStyle(el).backgroundImage;
-                    const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
-                    return match ? match[1] : null;
+    <script>
+        // Hide hero loader when background image is ready (with minimum visible time)
+        (function() {
+            function parseBgUrl(el) {
+                const bg = getComputedStyle(el).backgroundImage;
+                const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+                return match ? match[1] : null;
+            }
+
+            function preload(src) {
+                return new Promise(function(resolve) {
+                    if (!src) {
+                        return resolve();
+                    }
+                    const img = new Image();
+                    img.onload = function() {
+                        if (img.decode) {
+                            img.decode().catch(() => {}).finally(resolve);
+                        } else {
+                            resolve();
+                        }
+                    };
+                    img.onerror = function() {
+                        resolve();
+                    };
+                    img.src = src;
+                });
+            }
+
+            function ready() {
+                const hero = document.querySelector('section.hero-section');
+                if (!hero) {
+                    return;
                 }
-                function preload(src){
-                    return new Promise(function(resolve){
-                        if(!src){ return resolve(); }
-                        const img = new Image();
-                        img.onload = function(){
-                            if (img.decode) {
-                                img.decode().catch(()=>{}).finally(resolve);
-                            } else {
-                                resolve();
-                            }
-                        };
-                        img.onerror = function(){ resolve(); };
-                        img.src = src;
-                    });
-                }
-                function ready(){
-                    const hero = document.querySelector('section.hero-section');
-                    if(!hero){ return; }
-                    const start = Date.now();
-                    const minVisible = 1200; // ms
-                    const src = parseBgUrl(hero);
-                    const hardTimeout = new Promise(r => setTimeout(r, 3500));
-                    Promise.race([preload(src), hardTimeout]).then(function(){
-                        const elapsed = Date.now() - start;
-                        const remaining = Math.max(0, minVisible - elapsed);
-                        setTimeout(function(){ hero.classList.add('hero-loaded'); }, remaining);
-                    });
-                }
-                if(document.readyState === 'complete' || document.readyState === 'interactive'){
-                    ready();
-                } else {
-                    document.addEventListener('DOMContentLoaded', ready);
-                }
-            })();
-        </script>
+                const start = Date.now();
+                const minVisible = 1200; // ms
+                const src = parseBgUrl(hero);
+                const hardTimeout = new Promise(r => setTimeout(r, 3500));
+                Promise.race([preload(src), hardTimeout]).then(function() {
+                    const elapsed = Date.now() - start;
+                    const remaining = Math.max(0, minVisible - elapsed);
+                    setTimeout(function() {
+                        hero.classList.add('hero-loaded');
+                    }, remaining);
+                });
+            }
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                ready();
+            } else {
+                document.addEventListener('DOMContentLoaded', ready);
+            }
+        })();
+    </script>
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -357,4 +374,5 @@
         });
     </script>
 </body>
+
 </html>
